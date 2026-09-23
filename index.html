@@ -32,6 +32,7 @@
             }
         }
     </script>
+    
     <style>
         body {
             background-color: #08080c;
@@ -44,7 +45,7 @@
         }
 
         .glass-panel {
-            background: rgba(18, 18, 26, 0.65);
+            background: rgba(18, 18, 26, 0.75);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -112,8 +113,8 @@
 </head>
 <body class="font-sans antialiased min-h-screen flex flex-col justify-between overflow-x-hidden text-slate-100">
 
-    <div class="flex flex-1 pb-28 md:pb-32">
-        <!-- Sidebar -->
+    <div class="flex flex-1 pb-36 md:pb-32">
+        <!-- Sidebar Navigation -->
         <aside class="hidden md:flex flex-col w-64 glass-panel border-r border-white/10 p-6 z-20">
             <div class="flex items-center gap-3 mb-10">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-purple via-brand-pink to-brand-cyan p-0.5 flex items-center justify-center shadow-lg shadow-brand-purple/30">
@@ -169,9 +170,8 @@
             </nav>
         </aside>
 
-        <!-- Main Content Area -->
         <main class="flex-1 p-4 md:p-8 overflow-y-auto custom-scrollbar">
-            <!-- Top Search Header -->
+            <!-- Search Header -->
             <header class="flex items-center justify-between gap-4 mb-8">
                 <div class="relative flex-1 max-w-md">
                     <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
@@ -179,10 +179,19 @@
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full glass-panel border-white/10 text-xs font-semibold text-brand-cyan">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> GitHub Live Audio
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> GitHub Live Stream
                     </div>
                 </div>
             </header>
+
+            <!-- Status Banner for Audio Errors -->
+            <div id="error-toast" class="hidden mb-6 p-4 rounded-2xl bg-rose-500/20 border border-rose-500/40 text-rose-200 text-xs md:text-sm flex items-center justify-between gap-3 shadow-lg">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-triangle-exclamation text-rose-400 text-lg"></i>
+                    <span id="error-toast-text">Erreur de lecture audio. Veuillez vérifier votre connexion ou cliquer à nouveau sur lecture.</span>
+                </div>
+                <button onclick="dismissError()" class="px-2 py-1 rounded-lg bg-rose-500/30 hover:bg-rose-500/50 text-white font-bold text-xs">Fermer</button>
+            </div>
 
             <!-- Featured Banner -->
             <section class="relative rounded-3xl overflow-hidden mb-10 glass-panel border-white/10 p-6 md:p-10">
@@ -196,15 +205,15 @@
                         HARDTEKK <span class="text-brand-cyan">POWER</span>
                     </h2>
                     <p class="text-slate-300 text-sm md:text-base mb-6 leading-relaxed">
-                        Plongez dans les rythmes intenses, les kicks frénétiques et la puissance pure de la scène Tekk hébergée directement via GitHub Raw.
+                        Écoutez vos morceaux Hardtekk hébergés directement depuis votre dépôt GitHub avec égaliseur sonore et spectromètre en temps réel.
                     </p>
                     <button onclick="playAllHardtekk()" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-brand-cyan to-blue-600 text-slate-950 font-bold hover:brightness-110 transition-all shadow-lg shadow-brand-cyan/25 flex items-center gap-2">
-                        <i class="fa-solid fa-play"></i> Tout Écouter
+                        <i class="fa-solid fa-play"></i> Lancer la Playlist (4 Titres)
                     </button>
                 </div>
             </section>
 
-            <!-- Category Pills (Mobile & Desktop filtering) -->
+            <!-- Category Pills -->
             <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-6 custom-scrollbar">
                 <button onclick="filterCategory('ALL')" class="pill-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-white/5 border border-white/10 text-slate-300 hover:text-white transition-all">
                     Tous
@@ -233,12 +242,11 @@
 
             <!-- Track Grid -->
             <div id="track-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                <!-- Track Cards inserted by JS -->
+                <!-- Track Cards dynamically populated by JS -->
             </div>
         </main>
     </div>
 
-    <!-- Persistent Audio Player Bar -->
     <footer class="fixed bottom-0 left-0 right-0 glass-panel border-t border-white/10 px-4 py-3 md:px-8 md:py-4 z-50">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
             
@@ -252,30 +260,52 @@
                 </div>
                 <div class="overflow-hidden">
                     <h4 id="player-title" class="font-bold text-sm text-white truncate">Sélectionnez un titre</h4>
-                    <p id="player-artist" class="text-xs text-slate-400 truncate">Catégorie Hardtekk</p>
+                    <p id="player-artist" class="text-xs text-slate-400 truncate">Cliquez sur une piste pour lancer</p>
                 </div>
             </div>
 
-            <!-- Central Player Controls & Progress -->
+            <!-- Central Player Controls & Visualizer -->
             <div class="flex flex-col items-center gap-2 w-full md:w-2/4">
+                <!-- Real-time Frequency Meters -->
+                <div class="w-full flex items-center justify-between text-[10px] font-bold text-slate-400 px-1 gap-2">
+                    <div class="flex items-center gap-1.5 flex-1">
+                        <span class="text-brand-pink flex items-center gap-1"><i class="fa-solid fa-drum text-[9px]"></i> BASSES</span>
+                        <div class="flex-1 bg-slate-900/80 rounded-full h-1.5 overflow-hidden border border-white/10">
+                            <div id="meter-bass" class="bg-gradient-to-r from-brand-pink to-purple-600 h-full w-0 transition-all duration-75"></div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1.5 flex-1">
+                        <span class="text-brand-cyan flex items-center gap-1"><i class="fa-solid fa-wave-square text-[9px]"></i> MÉDIUMS</span>
+                        <div class="flex-1 bg-slate-900/80 rounded-full h-1.5 overflow-hidden border border-white/10">
+                            <div id="meter-mid" class="bg-gradient-to-r from-brand-cyan to-blue-500 h-full w-0 transition-all duration-75"></div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1.5 flex-1">
+                        <span class="text-amber-400 flex items-center gap-1"><i class="fa-solid fa-bolt text-[9px]"></i> AIGUS</span>
+                        <div class="flex-1 bg-slate-900/80 rounded-full h-1.5 overflow-hidden border border-white/10">
+                            <div id="meter-treble" class="bg-gradient-to-r from-amber-400 to-yellow-300 h-full w-0 transition-all duration-75"></div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Visualizer Canvas -->
-                <canvas id="visualizer" class="w-full h-8 rounded-lg bg-slate-950/40 border border-white/5 mb-1"></canvas>
+                <canvas id="visualizer" class="w-full h-10 rounded-lg bg-slate-950/60 border border-white/10 mb-1"></canvas>
 
                 <!-- Controls -->
                 <div class="flex items-center gap-5">
-                    <button onclick="toggleShuffle()" id="shuffle-btn" class="text-slate-400 hover:text-white transition-colors text-sm">
+                    <button onclick="toggleShuffle()" id="shuffle-btn" class="text-slate-400 hover:text-white transition-colors text-sm" title="Lecture aléatoire">
                         <i class="fa-solid fa-shuffle"></i>
                     </button>
-                    <button onclick="playPrevious()" class="text-slate-300 hover:text-brand-cyan transition-colors text-base">
+                    <button onclick="playPrevious()" class="text-slate-300 hover:text-brand-cyan transition-colors text-base" title="Précédent">
                         <i class="fa-solid fa-backward-step"></i>
                     </button>
                     <button onclick="togglePlay()" id="play-btn" class="w-11 h-11 rounded-full bg-gradient-to-r from-brand-cyan to-blue-600 text-slate-950 flex items-center justify-center hover:scale-105 transition-all shadow-lg shadow-brand-cyan/30">
                         <i class="fa-solid fa-play text-lg pl-0.5"></i>
                     </button>
-                    <button onclick="playNext()" class="text-slate-300 hover:text-brand-cyan transition-colors text-base">
+                    <button onclick="playNext()" class="text-slate-300 hover:text-brand-cyan transition-colors text-base" title="Suivant">
                         <i class="fa-solid fa-forward-step"></i>
                     </button>
-                    <button onclick="toggleRepeat()" id="repeat-btn" class="text-slate-400 hover:text-white transition-colors text-sm">
+                    <button onclick="toggleRepeat()" id="repeat-btn" class="text-slate-400 hover:text-white transition-colors text-sm" title="Répéter">
                         <i class="fa-solid fa-repeat"></i>
                     </button>
                 </div>
@@ -288,8 +318,12 @@
                 </div>
             </div>
 
-            <!-- Volume Control -->
+            <!-- Volume Control & EQ Toggle -->
             <div class="hidden md:flex items-center justify-end gap-3 w-1/4">
+                <button onclick="toggleEqPanel()" id="eq-btn" title="Égaliseur audio" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-brand-cyan/20 text-slate-300 hover:text-brand-cyan transition-all text-xs font-semibold flex items-center gap-1.5 border border-white/10">
+                    <i class="fa-solid fa-sliders text-brand-cyan"></i>
+                    <span>Égaliseur</span>
+                </button>
                 <button onclick="toggleMute()" id="mute-btn" class="text-slate-400 hover:text-white transition-colors">
                     <i class="fa-solid fa-volume-high"></i>
                 </button>
@@ -298,152 +332,325 @@
         </div>
     </footer>
 
-    <!-- Audio Element -->
-    <audio id="audio-element"></audio>
+    <div id="eq-panel" class="hidden fixed bottom-24 right-4 md:right-8 w-80 glass-panel rounded-2xl p-5 border border-white/15 shadow-2xl z-50 backdrop-blur-xl transition-all">
+        <div class="flex items-center justify-between mb-4 border-b border-white/10 pb-3">
+            <h3 class="font-bold text-sm text-white flex items-center gap-2">
+                <i class="fa-solid fa-sliders text-brand-cyan"></i> Égaliseur Studio (EQ)
+            </h3>
+            <button onclick="toggleEqPanel()" class="text-slate-400 hover:text-white text-xs p-1">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+        </div>
 
-    <!-- JavaScript Data and Controller Logic -->
+        <!-- EQ Presets -->
+        <div class="mb-4">
+            <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-2">Préréglages rapides</span>
+            <div class="grid grid-cols-4 gap-1.5">
+                <button onclick="setEqPreset('flat')" class="px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-[11px] font-semibold text-slate-300 transition-all border border-white/5 text-center">Plat</button>
+                <button onclick="setEqPreset('tekk')" class="px-2 py-1 rounded-lg bg-brand-pink/20 border border-brand-pink/40 hover:bg-brand-pink/30 text-[11px] font-bold text-brand-pink transition-all text-center">Tekk Kick</button>
+                <button onclick="setEqPreset('club')" class="px-2 py-1 rounded-lg bg-brand-cyan/20 border border-brand-cyan/40 hover:bg-brand-cyan/30 text-[11px] font-bold text-brand-cyan transition-all text-center">Club</button>
+                <button onclick="setEqPreset('clarity')" class="px-2 py-1 rounded-lg bg-amber-400/20 border border-amber-400/40 hover:bg-amber-400/30 text-[11px] font-bold text-amber-300 transition-all text-center">Voix</button>
+            </div>
+        </div>
+
+        <!-- Frequency Sliders -->
+        <div class="space-y-4">
+            <div>
+                <div class="flex justify-between items-center text-xs mb-1">
+                    <span class="font-semibold text-brand-pink flex items-center gap-1">
+                        <i class="fa-solid fa-drum text-[10px]"></i> BASSES (60-250 Hz)
+                    </span>
+                    <span id="bass-val" class="font-mono text-[11px] text-slate-300">0 dB</span>
+                </div>
+                <input type="range" id="bass-slider" min="-12" max="12" step="1" value="0" oninput="updateBass(this.value)" class="w-full">
+            </div>
+
+            <div>
+                <div class="flex justify-between items-center text-xs mb-1">
+                    <span class="font-semibold text-brand-cyan flex items-center gap-1">
+                        <i class="fa-solid fa-wave-square text-[10px]"></i> MÉDIUMS (1.5 kHz)
+                    </span>
+                    <span id="mid-val" class="font-mono text-[11px] text-slate-300">0 dB</span>
+                </div>
+                <input type="range" id="mid-slider" min="-12" max="12" step="1" value="0" oninput="updateMid(this.value)" class="w-full">
+            </div>
+
+            <div>
+                <div class="flex justify-between items-center text-xs mb-1">
+                    <span class="font-semibold text-amber-400 flex items-center gap-1">
+                        <i class="fa-solid fa-bolt text-[10px]"></i> AIGUS (4-12 kHz)
+                    </span>
+                    <span id="treble-val" class="font-mono text-[11px] text-slate-300">0 dB</span>
+                </div>
+                <input type="range" id="treble-slider" min="-12" max="12" step="1" value="0" oninput="updateTreble(this.value)" class="w-full">
+            </div>
+        </div>
+
+        <button onclick="setEqPreset('flat')" class="w-full mt-4 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs text-slate-400 hover:text-white transition-all text-center">
+            Réinitialiser l'égaliseur
+        </button>
+    </div>
+
+    <!-- Audio Element with explicit CORS support -->
+    <audio id="audio-element" crossorigin="anonymous" preload="auto"></audio>
+
     <script>
         const tracks = [
             {
                 id: 1,
-                title: "SOMETIMES",
-                artist: "HARDTEKK",
+                title: "SOMETIMES (HARDTEKK)",
+                artist: "Hardtekk Producer",
                 category: "HARDTEKK",
-                cover: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=500&auto=format&fit=crop&q=80",
+                cover: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&auto=format&fit=crop&q=80",
                 audioUrl: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/SOMETIMES(HARDTEKK).mp3"
             },
             {
                 id: 2,
                 title: "CARAMEL JESTER - UMBRELLA",
-                artist: "HARDTEKK",
+                artist: "Caramel Jester",
                 category: "HARDTEKK",
-                cover: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=500&auto=format&fit=crop&q=80",
+                cover: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&auto=format&fit=crop&q=80",
                 audioUrl: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/CARAMEL%20JESTER%20-%20UMBRELLA(HARDTEKK).mp3"
             },
             {
                 id: 3,
-                title: "COOL",
-                artist: "HARDTEKK",
+                title: "COOL (HARDTEKK)",
+                artist: "Hardtekk Artist",
                 category: "HARDTEKK",
-                cover: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&auto=format&fit=crop&q=80",
+                cover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&auto=format&fit=crop&q=80",
                 audioUrl: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/COOL(HARDTEKK).mp3"
             },
             {
                 id: 4,
-                title: "Eins Zwei Polizei",
-                artist: "HARDTEKK",
+                title: "Eins Zwei Polizei (HARDTEKK)",
+                artist: "Hardtekk Remix",
                 category: "HARDTEKK",
-                cover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&auto=format&fit=crop&q=80",
+                cover: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=300&auto=format&fit=crop&q=80",
                 audioUrl: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/Eins%20Zwei%20Polizei(HARDTEKK).mp3"
             }
         ];
 
         let currentTrackIndex = -1;
         let isPlaying = false;
-        let currentFilter = 'HARDTEKK';
         let isShuffle = false;
         let isRepeat = false;
+        let currentFilter = 'HARDTEKK';
 
         const audio = document.getElementById('audio-element');
         const playBtn = document.getElementById('play-btn');
-        const seekBar = document.getElementById('seek-bar');
-        const volumeBar = document.getElementById('volume-bar');
-        const currentTimeEl = document.getElementById('current-time');
-        const totalTimeEl = document.getElementById('total-time');
         const playerTitle = document.getElementById('player-title');
         const playerArtist = document.getElementById('player-artist');
         const playerCover = document.getElementById('player-cover');
         const coverSpinner = document.getElementById('cover-spinner');
+        const seekBar = document.getElementById('seek-bar');
+        const currentTimeEl = document.getElementById('current-time');
+        const totalTimeEl = document.getElementById('total-time');
+
+        let audioCtx = null;
+        let analyser = null;
+        let audioSource = null;
+        let dataArray = null;
+
+        let bassFilter = null;
+        let midFilter = null;
+        let trebleFilter = null;
+
+        function showError(msg) {
+            const toast = document.getElementById('error-toast');
+            const toastText = document.getElementById('error-toast-text');
+            if (toast && toastText) {
+                toastText.innerText = msg;
+                toast.classList.remove('hidden');
+            }
+        }
+
+        function dismissError() {
+            const toast = document.getElementById('error-toast');
+            if (toast) toast.classList.add('hidden');
+        }
+
+        function initAudioContext() {
+            if (!audioCtx) {
+                try {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    audioCtx = new AudioContext();
+
+                    bassFilter = audioCtx.createBiquadFilter();
+                    bassFilter.type = 'lowshelf';
+                    bassFilter.frequency.value = 250;
+                    bassFilter.gain.value = parseFloat(document.getElementById('bass-slider')?.value || 0);
+
+                    midFilter = audioCtx.createBiquadFilter();
+                    midFilter.type = 'peaking';
+                    midFilter.frequency.value = 1500;
+                    midFilter.Q.value = 1;
+                    midFilter.gain.value = parseFloat(document.getElementById('mid-slider')?.value || 0);
+
+                    trebleFilter = audioCtx.createBiquadFilter();
+                    trebleFilter.type = 'highshelf';
+                    trebleFilter.frequency.value = 4000;
+                    trebleFilter.gain.value = parseFloat(document.getElementById('treble-slider')?.value || 0);
+
+                    analyser = audioCtx.createAnalyser();
+                    analyser.fftSize = 128;
+
+                    // Ensure crossorigin is set on audio element
+                    audio.crossOrigin = "anonymous";
+                    audioSource = audioCtx.createMediaElementSource(audio);
+
+                    audioSource.connect(bassFilter);
+                    bassFilter.connect(midFilter);
+                    midFilter.connect(trebleFilter);
+                    trebleFilter.connect(analyser);
+                    analyser.connect(audioCtx.destination);
+
+                    dataArray = new Uint8Array(analyser.frequencyBinCount);
+                } catch (e) {
+                    console.warn("Web Audio API fallbacked:", e);
+                }
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function updateBass(val) {
+            const num = parseFloat(val);
+            const valEl = document.getElementById('bass-val');
+            if (valEl) valEl.innerText = (num > 0 ? '+' : '') + num + ' dB';
+            if (bassFilter && audioCtx) {
+                bassFilter.gain.setTargetAtTime(num, audioCtx.currentTime, 0.01);
+            }
+        }
+
+        function updateMid(val) {
+            const num = parseFloat(val);
+            const valEl = document.getElementById('mid-val');
+            if (valEl) valEl.innerText = (num > 0 ? '+' : '') + num + ' dB';
+            if (midFilter && audioCtx) {
+                midFilter.gain.setTargetAtTime(num, audioCtx.currentTime, 0.01);
+            }
+        }
+
+        function updateTreble(val) {
+            const num = parseFloat(val);
+            const valEl = document.getElementById('treble-val');
+            if (valEl) valEl.innerText = (num > 0 ? '+' : '') + num + ' dB';
+            if (trebleFilter && audioCtx) {
+                trebleFilter.gain.setTargetAtTime(num, audioCtx.currentTime, 0.01);
+            }
+        }
+
+        function setEqPreset(preset) {
+            let b = 0, m = 0, t = 0;
+            if (preset === 'tekk') { b = 10; m = 1; t = 6; }
+            else if (preset === 'club') { b = 6; m = 0; t = 4; }
+            else if (preset === 'clarity') { b = -3; m = 4; t = 7; }
+
+            const bSlider = document.getElementById('bass-slider');
+            const mSlider = document.getElementById('mid-slider');
+            const tSlider = document.getElementById('treble-slider');
+
+            if (bSlider) bSlider.value = b;
+            if (mSlider) mSlider.value = m;
+            if (tSlider) tSlider.value = t;
+
+            updateBass(b);
+            updateMid(m);
+            updateTreble(t);
+        }
+
+        function toggleEqPanel() {
+            const panel = document.getElementById('eq-panel');
+            if (panel) {
+                panel.classList.toggle('hidden');
+            }
+        }
 
         const canvas = document.getElementById('visualizer');
         const ctx = canvas.getContext('2d');
-        let animationFrameId;
 
         function resizeCanvas() {
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
+            if (canvas) {
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+            }
         }
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
         function drawVisualizer() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const barWidth = 4;
-            const gap = 3;
-            const barCount = Math.floor(canvas.width / (barWidth + gap));
-            
-            for (let i = 0; i < barCount; i++) {
-                let barHeight;
-                if (isPlaying) {
-                    barHeight = Math.sin(Date.now() * 0.005 + i * 0.2) * (canvas.height / 2.5) + (canvas.height / 2);
-                } else {
-                    barHeight = 4;
+
+            const meterBass = document.getElementById('meter-bass');
+            const meterMid = document.getElementById('meter-mid');
+            const meterTreble = document.getElementById('meter-treble');
+
+            if (analyser && isPlaying && dataArray) {
+                analyser.getByteFrequencyData(dataArray);
+
+                const totalBins = dataArray.length;
+                const bassBins = dataArray.slice(0, Math.floor(totalBins * 0.25));
+                const midBins = dataArray.slice(Math.floor(totalBins * 0.25), Math.floor(totalBins * 0.65));
+                const trebleBins = dataArray.slice(Math.floor(totalBins * 0.65));
+
+                const avgBass = bassBins.reduce((a, b) => a + b, 0) / (bassBins.length || 1);
+                const avgMid = midBins.reduce((a, b) => a + b, 0) / (midBins.length || 1);
+                const avgTreble = trebleBins.reduce((a, b) => a + b, 0) / (trebleBins.length || 1);
+
+                if (meterBass) meterBass.style.width = Math.min(100, (avgBass / 255) * 135) + '%';
+                if (meterMid) meterMid.style.width = Math.min(100, (avgMid / 255) * 135) + '%';
+                if (meterTreble) meterTreble.style.width = Math.min(100, (avgTreble / 255) * 135) + '%';
+
+                const barWidth = (canvas.width / totalBins) - 1.5;
+                for (let i = 0; i < totalBins; i++) {
+                    const value = dataArray[i];
+                    const barHeight = (value / 255) * canvas.height;
+                    const x = i * (barWidth + 1.5);
+                    const y = canvas.height - barHeight;
+
+                    let gradient;
+                    if (i < totalBins * 0.25) {
+                        gradient = ctx.createLinearGradient(0, y, 0, canvas.height);
+                        gradient.addColorStop(0, '#ff0080');
+                        gradient.addColorStop(1, '#7928ca');
+                    } else if (i < totalBins * 0.65) {
+                        gradient = ctx.createLinearGradient(0, y, 0, canvas.height);
+                        gradient.addColorStop(0, '#00f2fe');
+                        gradient.addColorStop(1, '#3b82f6');
+                    } else {
+                        gradient = ctx.createLinearGradient(0, y, 0, canvas.height);
+                        gradient.addColorStop(0, '#f59e0b');
+                        gradient.addColorStop(1, '#eab308');
+                    }
+
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.roundRect(x, y, Math.max(1, barWidth), barHeight, [2, 2, 0, 0]);
+                    ctx.fill();
                 }
-                const x = i * (barWidth + gap);
-                const y = (canvas.height - barHeight) / 2;
+            } else {
+                if (meterBass) meterBass.style.width = '0%';
+                if (meterMid) meterMid.style.width = '0%';
+                if (meterTreble) meterTreble.style.width = '0%';
 
-                const gradient = ctx.createLinearGradient(0, y, 0, y + barHeight);
-                gradient.addColorStop(0, '#00f2fe');
-                gradient.addColorStop(1, '#7928ca');
-
-                ctx.fillStyle = gradient;
-                ctx.beginPath();
-                ctx.roundRect(x, y, barWidth, barHeight, 2);
-                ctx.fill();
+                const barWidth = 4;
+                const gap = 3;
+                const barCount = Math.floor(canvas.width / (barWidth + gap));
+                for (let i = 0; i < barCount; i++) {
+                    const x = i * (barWidth + gap);
+                    const y = canvas.height - 3;
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+                    ctx.fillRect(x, y, barWidth, 3);
+                }
             }
 
-            animationFrameId = requestAnimationFrame(drawVisualizer);
+            requestAnimationFrame(drawVisualizer);
         }
         drawVisualizer();
 
-        function renderTracks() {
-            const grid = document.getElementById('track-grid');
-            grid.innerHTML = '';
-
-            const filtered = tracks.filter(t => {
-                const matchesCategory = currentFilter === 'ALL' || t.category === currentFilter;
-                return matchesCategory;
-            });
-
-            document.getElementById('track-count').innerText = `${filtered.length} titre(s) disponible(s)`;
-
-            if (filtered.length === 0) {
-                grid.innerHTML = `
-                    <div class="col-span-full text-center py-12 glass-panel rounded-2xl">
-                        <i class="fa-solid fa-music text-4xl text-slate-600 mb-3"></i>
-                        <p class="text-slate-400 font-medium">Aucun titre disponible dans cette catégorie pour le moment.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            filtered.forEach((track) => {
-                const isCurrent = currentTrackIndex !== -1 && tracks[currentTrackIndex].id === track.id;
-                const card = document.createElement('div');
-                card.className = `glass-card rounded-2xl p-4 flex flex-col justify-between group cursor-pointer relative overflow-hidden ${isCurrent ? 'ring-2 ring-brand-cyan bg-white/10' : ''}`;
-                card.onclick = () => playTrackById(track.id);
-
-                card.innerHTML = `
-                    <div class="relative aspect-square rounded-xl overflow-hidden mb-3 bg-slate-800">
-                        <img src="${track.cover}" alt="${track.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                        <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <div class="w-12 h-12 rounded-full bg-brand-cyan text-slate-950 flex items-center justify-center shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-transform">
-                                <i class="fa-solid ${isCurrent && isPlaying ? 'fa-pause' : 'fa-play'} text-lg"></i>
-                            </div>
-                        </div>
-                        ${isCurrent ? '<span class="absolute top-2 right-2 w-3 h-3 bg-brand-cyan rounded-full animate-ping"></span>' : ''}
-                    </div>
-                    <div>
-                        <span class="text-[10px] uppercase font-extrabold tracking-wider text-brand-cyan px-2 py-0.5 rounded-md bg-brand-cyan/10 inline-block mb-1">${track.category}</span>
-                        <h4 class="font-bold text-sm text-white truncate">${track.title}</h4>
-                        <p class="text-xs text-slate-400 truncate">${track.artist}</p>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
         function playTrackById(id) {
+            dismissError();
             const index = tracks.findIndex(t => t.id === id);
             if (index !== -1) {
                 if (currentTrackIndex === index && isPlaying) {
@@ -456,7 +663,11 @@
         }
 
         function loadAndPlayTrack() {
+            dismissError();
+            initAudioContext();
             const track = tracks[currentTrackIndex];
+            if (!track) return;
+
             playerTitle.innerText = track.title;
             playerArtist.innerText = track.artist;
             playerCover.src = track.cover;
@@ -464,21 +675,40 @@
             coverSpinner.classList.remove('hidden');
             coverSpinner.classList.add('flex');
 
+            audio.crossOrigin = "anonymous";
             audio.src = track.audioUrl;
-            audio.play().then(() => {
-                isPlaying = true;
-                updatePlayBtn();
-                coverSpinner.classList.add('hidden');
-                coverSpinner.classList.remove('flex');
-                renderTracks();
-            }).catch(err => {
-                console.error("Erreur de lecture :", err);
-                coverSpinner.classList.add('hidden');
-                coverSpinner.classList.remove('flex');
-            });
+            audio.load();
+
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    isPlaying = true;
+                    updatePlayBtn();
+                    coverSpinner.classList.add('hidden');
+                    coverSpinner.classList.remove('flex');
+                    renderTracks();
+                }).catch(err => {
+                    console.error("Playback failed:", err);
+                    isPlaying = false;
+                    updatePlayBtn();
+                    coverSpinner.classList.add('hidden');
+                    coverSpinner.classList.remove('flex');
+                    showError("Impossible de lancer la musique. Cliquez à nouveau sur 'Play' ou vérifiez votre connexion.");
+                });
+            }
         }
 
+        audio.onerror = function() {
+            coverSpinner.classList.add('hidden');
+            coverSpinner.classList.remove('flex');
+            isPlaying = false;
+            updatePlayBtn();
+            showError("Le fichier MP3 n'a pas pu être chargé depuis GitHub. Vérifiez que le fichier existe bien sur votre dépôt.");
+        };
+
         function togglePlay() {
+            dismissError();
+            initAudioContext();
             if (currentTrackIndex === -1 && tracks.length > 0) {
                 currentTrackIndex = 0;
                 loadAndPlayTrack();
@@ -487,9 +717,13 @@
             if (isPlaying) {
                 pauseAudio();
             } else {
-                audio.play();
-                isPlaying = true;
-                updatePlayBtn();
+                audio.play().then(() => {
+                    isPlaying = true;
+                    updatePlayBtn();
+                    renderTracks();
+                }).catch(err => {
+                    showError("Interaction requise : cliquez sur la piste pour valider la lecture.");
+                });
             }
         }
 
@@ -534,6 +768,76 @@
             currentFilter = cat;
             document.getElementById('section-title').innerText = cat === 'ALL' ? 'Tous les titres' : `Pistes ${cat}`;
             renderTracks();
+        }
+
+        function renderTracks() {
+            const grid = document.getElementById('track-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            const filtered = currentFilter === 'ALL' 
+                ? tracks 
+                : tracks.filter(t => t.category === currentFilter);
+
+            const countEl = document.getElementById('track-count');
+            if (countEl) {
+                countEl.innerText = `${filtered.length} titre${filtered.length > 1 ? 's' : ''} disponible${filtered.length > 1 ? 's' : ''}`;
+            }
+
+            document.querySelectorAll('.pill-btn').forEach(btn => {
+                const text = btn.textContent.trim().toUpperCase();
+                let categoryMatch = false;
+                if (currentFilter === 'ALL' && text.includes('TOUS')) categoryMatch = true;
+                else if (currentFilter !== 'ALL' && text.includes(currentFilter)) categoryMatch = true;
+
+                if (categoryMatch) {
+                    btn.className = "pill-btn active px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-brand-cyan text-slate-950 font-bold shadow-md shadow-brand-cyan/20 transition-all";
+                } else {
+                    btn.className = "pill-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-white/5 border border-white/10 text-slate-300 hover:text-white transition-all";
+                }
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12 text-slate-400">
+                        <i class="fa-solid fa-music text-4xl mb-3 block text-slate-600"></i>
+                        <p class="text-sm font-medium">Aucun titre disponible dans cette catégorie pour le moment.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(track => {
+                const isCurrent = currentTrackIndex !== -1 && tracks[currentTrackIndex]?.id === track.id;
+                const card = document.createElement('div');
+                card.className = `glass-card rounded-2xl p-4 flex flex-col justify-between group cursor-pointer relative overflow-hidden transition-all duration-300 ${isCurrent ? 'border-brand-cyan/60 bg-white/10 shadow-lg shadow-brand-cyan/10' : ''}`;
+                
+                card.onclick = () => playTrackById(track.id);
+
+                card.innerHTML = `
+                    <div class="relative aspect-square rounded-xl overflow-hidden mb-3 bg-slate-800 group">
+                        <img src="${track.cover}" alt="${track.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center ${isCurrent ? '!opacity-100 bg-slate-950/50' : ''}">
+                            <div class="w-12 h-12 rounded-full bg-brand-cyan text-slate-950 flex items-center justify-center shadow-lg shadow-brand-cyan/40 hover:scale-110 transition-transform">
+                                <i class="fa-solid ${isCurrent && isPlaying ? 'fa-pause text-xl' : 'fa-play text-xl pl-1'}"></i>
+                            </div>
+                        </div>
+                        ${isCurrent && isPlaying ? `
+                            <div class="absolute top-2 right-2 px-2 py-1 bg-brand-cyan text-slate-950 font-bold text-[10px] rounded-full flex items-center gap-1 shadow-md">
+                                <span class="w-1.5 h-1.5 rounded-full bg-slate-950 animate-ping"></span> EN LECTURE
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-1">
+                            <h4 class="font-bold text-sm text-white truncate ${isCurrent ? 'text-brand-cyan' : ''}">${track.title}</h4>
+                            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-white/10 text-slate-300">${track.category}</span>
+                        </div>
+                        <p class="text-xs text-slate-400 truncate">${track.artist}</p>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
         }
 
         function searchTracks() {
@@ -609,7 +913,7 @@
             document.getElementById('mute-btn').innerHTML = audio.muted ? '<i class="fa-solid fa-volume-xmark"></i>' : '<i class="fa-solid fa-volume-high"></i>';
         }
 
-        // Initialize display
+        // Initial render on page load
         renderTracks();
     </script>
 </body>
