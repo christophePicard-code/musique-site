@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harmonie Music - Stream Hardtekk & Electronic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            cyan: '#00f2fe',
+                            purple: '#7928ca',
+                            pink: '#ff0080',
+                            dark: '#0a0a0f',
+                            card: 'rgba(255, 255, 255, 0.05)',
+                            border: 'rgba(255, 255, 255, 0.1)'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #08080c;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(121, 40, 202, 0.25) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(0, 242, 254, 0.2) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(255, 0, 128, 0.15) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: #e2e8f0;
+        }
+
+        .glass-panel {
+            background: rgba(18, 18, 26, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(0, 242, 254, 0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px -10px rgba(0, 242, 254, 0.2);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 9999px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 242, 254, 0.4);
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 14px;
+            width: 14px;
+            border-radius: 50%;
+            background: #00f2fe;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.8);
+            margin-top: -5px;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+        .neon-glow {
+            animation: pulseGlow 3s infinite;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col justify-between overflow-x-hidden text-slate-100">
+
+    <div class="flex flex-1 pb-28 md:pb-32">
+        <!-- Sidebar -->
+        <aside class="hidden md:flex flex-col w-64 glass-panel border-r border-white/10 p-6 z-20">
+            <div class="flex items-center gap-3 mb-10">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-purple via-brand-pink to-brand-cyan p-0.5 flex items-center justify-center shadow-lg shadow-brand-purple/30">
+                    <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+                        <i class="fa-solid fa-compact-disc text-brand-cyan text-xl animate-spin" style="animation-duration: 8s;"></i>
+                    </div>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-lg tracking-wider bg-gradient-to-r from-brand-cyan via-white to-brand-pink bg-clip-text text-transparent">
+                        HARMONIE
+                    </h1>
+                    <span class="text-[10px] uppercase tracking-widest text-slate-400 block -mt-1">Music Studio</span>
+                </div>
+            </div>
+
+            <nav class="space-y-6">
+                <div>
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 px-3">Menu</p>
+                    <div class="space-y-1">
+                        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-brand-cyan/10 text-brand-cyan font-medium transition-all">
+                            <i class="fa-solid fa-house w-5"></i> Découvrir
+                        </a>
+                        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 font-medium transition-all">
+                            <i class="fa-solid fa-fire w-5"></i> Tendances
+                        </a>
+                        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 font-medium transition-all">
+                            <i class="fa-solid fa-heart w-5"></i> Favoris
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 px-3">Genres</p>
+                    <div class="space-y-1" id="sidebar-categories">
+                        <button onclick="filterCategory('HARDTEKK')" class="category-btn active w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium transition-all bg-gradient-to-r from-brand-purple/40 to-brand-cyan/20 text-white border border-brand-cyan/30">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-bolt text-brand-cyan"></i> HARDTEKK</span>
+                            <span class="text-xs bg-brand-cyan/20 text-brand-cyan px-2 py-0.5 rounded-full font-bold">4</span>
+                        </button>
+                        <button onclick="filterCategory('TECHNO')" class="category-btn w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-wave-square"></i> TECHNO</span>
+                            <span class="text-xs bg-white/5 px-2 py-0.5 rounded-full">0</span>
+                        </button>
+                        <button onclick="filterCategory('ELECTRO')" class="category-btn w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-sliders"></i> ELECTRO</span>
+                            <span class="text-xs bg-white/5 px-2 py-0.5 rounded-full">0</span>
+                        </button>
+                        <button onclick="filterCategory('DEEP HOUSE')" class="category-btn w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-cloud-moon"></i> DEEP HOUSE</span>
+                            <span class="text-xs bg-white/5 px-2 py-0.5 rounded-full">0</span>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 p-4 md:p-8 overflow-y-auto custom-scrollbar">
+            <!-- Top Search Header -->
+            <header class="flex items-center justify-between gap-4 mb-8">
+                <div class="relative flex-1 max-w-md">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" id="search-input" onkeyup="searchTracks()" placeholder="Rechercher un titre, artiste..." class="w-full bg-slate-900/60 border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-brand-cyan/50 focus:ring-2 focus:ring-brand-cyan/20 transition-all text-white placeholder-slate-500 backdrop-blur-md">
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full glass-panel border-white/10 text-xs font-semibold text-brand-cyan">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> GitHub Live Audio
+                    </div>
+                </div>
+            </header>
+
+            <!-- Featured Banner -->
+            <section class="relative rounded-3xl overflow-hidden mb-10 glass-panel border-white/10 p-6 md:p-10">
+                <div class="absolute inset-0 bg-gradient-to-r from-brand-purple/60 via-slate-950/80 to-slate-950/90 z-0"></div>
+                <div class="absolute -right-20 -top-20 w-80 h-80 bg-brand-cyan/20 rounded-full blur-3xl neon-glow"></div>
+                <div class="relative z-10 max-w-xl">
+                    <span class="px-3 py-1 rounded-full bg-brand-cyan/20 text-brand-cyan border border-brand-cyan/30 text-xs font-bold tracking-wide uppercase inline-block mb-3">
+                        <i class="fa-solid fa-fire mr-1"></i> Genre Vedette
+                    </span>
+                    <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white mb-3">
+                        HARDTEKK <span class="text-brand-cyan">POWER</span>
+                    </h2>
+                    <p class="text-slate-300 text-sm md:text-base mb-6 leading-relaxed">
+                        Plongez dans les rythmes intenses, les kicks frénétiques et la puissance pure de la scène Tekk hébergée directement via GitHub Raw.
+                    </p>
+                    <button onclick="playAllHardtekk()" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-brand-cyan to-blue-600 text-slate-950 font-bold hover:brightness-110 transition-all shadow-lg shadow-brand-cyan/25 flex items-center gap-2">
+                        <i class="fa-solid fa-play"></i> Tout Écouter
+                    </button>
+                </div>
+            </section>
+
+            <!-- Category Pills (Mobile & Desktop filtering) -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-6 custom-scrollbar">
+                <button onclick="filterCategory('ALL')" class="pill-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-white/5 border border-white/10 text-slate-300 hover:text-white transition-all">
+                    Tous
+                </button>
+                <button onclick="filterCategory('HARDTEKK')" class="pill-btn active px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-brand-cyan text-slate-950 font-bold shadow-md shadow-brand-cyan/20 transition-all">
+                    ⚡ HARDTEKK (4)
+                </button>
+                <button onclick="filterCategory('TECHNO')" class="pill-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-white/5 border border-white/10 text-slate-300 hover:text-white transition-all">
+                    🎹 TECHNO
+                </button>
+                <button onclick="filterCategory('ELECTRO')" class="pill-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-white/5 border border-white/10 text-slate-300 hover:text-white transition-all">
+                    🎛️ ELECTRO
+                </button>
+                <button onclick="filterCategory('DEEP HOUSE')" class="pill-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-white/5 border border-white/10 text-slate-300 hover:text-white transition-all">
+                    🌙 DEEP HOUSE
+                </button>
+            </div>
+
+            <!-- Track Section Header -->
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-white flex items-center gap-2" id="section-title">
+                    <i class="fa-solid fa-compact-disc text-brand-cyan"></i> Pistes HARDTEKK
+                </h3>
+                <span id="track-count" class="text-xs text-slate-400 font-medium">4 titres disponibles</span>
+            </div>
+
+            <!-- Track Grid -->
+            <div id="track-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                <!-- Track Cards inserted by JS -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Persistent Audio Player Bar -->
+    <footer class="fixed bottom-0 left-0 right-0 glass-panel border-t border-white/10 px-4 py-3 md:px-8 md:py-4 z-50">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+            
+            <!-- Currently Playing Info -->
+            <div class="flex items-center gap-4 w-full md:w-1/4">
+                <div class="relative w-12 h-12 md:w-14 md:h-14 rounded-xl overflow-hidden bg-slate-800 border border-white/10 flex-shrink-0 group">
+                    <img id="player-cover" src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&auto=format&fit=crop&q=80" alt="Cover" class="w-full h-full object-cover">
+                    <div id="cover-spinner" class="absolute inset-0 bg-slate-950/60 hidden items-center justify-center">
+                        <i class="fa-solid fa-compact-disc text-brand-cyan text-xl animate-spin"></i>
+                    </div>
+                </div>
+                <div class="overflow-hidden">
+                    <h4 id="player-title" class="font-bold text-sm text-white truncate">Sélectionnez un titre</h4>
+                    <p id="player-artist" class="text-xs text-slate-400 truncate">Catégorie Hardtekk</p>
+                </div>
+            </div>
+
+            <!-- Central Player Controls & Progress -->
+            <div class="flex flex-col items-center gap-2 w-full md:w-2/4">
+                <!-- Visualizer Canvas -->
+                <canvas id="visualizer" class="w-full h-8 rounded-lg bg-slate-950/40 border border-white/5 mb-1"></canvas>
+
+                <!-- Controls -->
+                <div class="flex items-center gap-5">
+                    <button onclick="toggleShuffle()" id="shuffle-btn" class="text-slate-400 hover:text-white transition-colors text-sm">
+                        <i class="fa-solid fa-shuffle"></i>
+                    </button>
+                    <button onclick="playPrevious()" class="text-slate-300 hover:text-brand-cyan transition-colors text-base">
+                        <i class="fa-solid fa-backward-step"></i>
+                    </button>
+                    <button onclick="togglePlay()" id="play-btn" class="w-11 h-11 rounded-full bg-gradient-to-r from-brand-cyan to-blue-600 text-slate-950 flex items-center justify-center hover:scale-105 transition-all shadow-lg shadow-brand-cyan/30">
+                        <i class="fa-solid fa-play text-lg pl-0.5"></i>
+                    </button>
+                    <button onclick="playNext()" class="text-slate-300 hover:text-brand-cyan transition-colors text-base">
+                        <i class="fa-solid fa-forward-step"></i>
+                    </button>
+                    <button onclick="toggleRepeat()" id="repeat-btn" class="text-slate-400 hover:text-white transition-colors text-sm">
+                        <i class="fa-solid fa-repeat"></i>
+                    </button>
+                </div>
+
+                <!-- Progress Bar & Timers -->
+                <div class="flex items-center gap-3 w-full max-w-md">
+                    <span id="current-time" class="text-[11px] font-mono text-slate-400 w-9 text-right">0:00</span>
+                    <input type="range" id="seek-bar" value="0" max="100" class="flex-1" oninput="seekAudio(this.value)">
+                    <span id="total-time" class="text-[11px] font-mono text-slate-400 w-9">0:00</span>
+                </div>
+            </div>
+
+            <!-- Volume Control -->
+            <div class="hidden md:flex items-center justify-end gap-3 w-1/4">
+                <button onclick="toggleMute()" id="mute-btn" class="text-slate-400 hover:text-white transition-colors">
+                    <i class="fa-solid fa-volume-high"></i>
+                </button>
+                <input type="range" id="volume-bar" value="80" max="100" class="w-24" oninput="setVolume(this.value)">
+            </div>
+        </div>
+    </footer>
+
+    <!-- Audio Element -->
+    <audio id="audio-element"></audio>
+
+    <!-- JavaScript Data and Controller Logic -->
+    <script>
+        const tracks = [
+            {
+                id: 1,
+                title: "SOMETIMES",
+                artist: "HARDTEKK",
+                category: "HARDTEKK",
+                cover: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=500&auto=format&fit=crop&q=80",
+                audioUrl: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/SOMETIMES(HARDTEKK).mp3"
+            },
+            {
+                id: 2,
+                title: "CARAMEL JESTER - UMBRELLA",
+                artist: "HARDTEKK",
+                category: "HARDTEKK",
+                cover: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=500&auto=format&fit=crop&q=80",
+                audioUrl: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/CARAMEL%20JESTER%20-%20UMBRELLA(HARDTEKK).mp3"
+            },
+            {
+                id: 3,
+                title: "COOL",
+                artist: "HARDTEKK",
+                category: "HARDTEKK",
+                cover: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&auto=format&fit=crop&q=80",
+                audioUrl: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/COOL(HARDTEKK).mp3"
+            },
+            {
+                id: 4,
+                title: "Eins Zwei Polizei",
+                artist: "HARDTEKK",
+                category: "HARDTEKK",
+                cover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&auto=format&fit=crop&q=80",
+                audioUrl: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/Eins%20Zwei%20Polizei(HARDTEKK).mp3"
+            }
+        ];
+
+        let currentTrackIndex = -1;
+        let isPlaying = false;
+        let currentFilter = 'HARDTEKK';
+        let isShuffle = false;
+        let isRepeat = false;
+
+        const audio = document.getElementById('audio-element');
+        const playBtn = document.getElementById('play-btn');
+        const seekBar = document.getElementById('seek-bar');
+        const volumeBar = document.getElementById('volume-bar');
+        const currentTimeEl = document.getElementById('current-time');
+        const totalTimeEl = document.getElementById('total-time');
+        const playerTitle = document.getElementById('player-title');
+        const playerArtist = document.getElementById('player-artist');
+        const playerCover = document.getElementById('player-cover');
+        const coverSpinner = document.getElementById('cover-spinner');
+
+        const canvas = document.getElementById('visualizer');
+        const ctx = canvas.getContext('2d');
+        let animationFrameId;
+
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function drawVisualizer() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const barWidth = 4;
+            const gap = 3;
+            const barCount = Math.floor(canvas.width / (barWidth + gap));
+            
+            for (let i = 0; i < barCount; i++) {
+                let barHeight;
+                if (isPlaying) {
+                    barHeight = Math.sin(Date.now() * 0.005 + i * 0.2) * (canvas.height / 2.5) + (canvas.height / 2);
+                } else {
+                    barHeight = 4;
+                }
+                const x = i * (barWidth + gap);
+                const y = (canvas.height - barHeight) / 2;
+
+                const gradient = ctx.createLinearGradient(0, y, 0, y + barHeight);
+                gradient.addColorStop(0, '#00f2fe');
+                gradient.addColorStop(1, '#7928ca');
+
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.roundRect(x, y, barWidth, barHeight, 2);
+                ctx.fill();
+            }
+
+            animationFrameId = requestAnimationFrame(drawVisualizer);
+        }
+        drawVisualizer();
+
+        function renderTracks() {
+            const grid = document.getElementById('track-grid');
+            grid.innerHTML = '';
+
+            const filtered = tracks.filter(t => {
+                const matchesCategory = currentFilter === 'ALL' || t.category === currentFilter;
+                return matchesCategory;
+            });
+
+            document.getElementById('track-count').innerText = `${filtered.length} titre(s) disponible(s)`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12 glass-panel rounded-2xl">
+                        <i class="fa-solid fa-music text-4xl text-slate-600 mb-3"></i>
+                        <p class="text-slate-400 font-medium">Aucun titre disponible dans cette catégorie pour le moment.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach((track) => {
+                const isCurrent = currentTrackIndex !== -1 && tracks[currentTrackIndex].id === track.id;
+                const card = document.createElement('div');
+                card.className = `glass-card rounded-2xl p-4 flex flex-col justify-between group cursor-pointer relative overflow-hidden ${isCurrent ? 'ring-2 ring-brand-cyan bg-white/10' : ''}`;
+                card.onclick = () => playTrackById(track.id);
+
+                card.innerHTML = `
+                    <div class="relative aspect-square rounded-xl overflow-hidden mb-3 bg-slate-800">
+                        <img src="${track.cover}" alt="${track.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <div class="w-12 h-12 rounded-full bg-brand-cyan text-slate-950 flex items-center justify-center shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-transform">
+                                <i class="fa-solid ${isCurrent && isPlaying ? 'fa-pause' : 'fa-play'} text-lg"></i>
+                            </div>
+                        </div>
+                        ${isCurrent ? '<span class="absolute top-2 right-2 w-3 h-3 bg-brand-cyan rounded-full animate-ping"></span>' : ''}
+                    </div>
+                    <div>
+                        <span class="text-[10px] uppercase font-extrabold tracking-wider text-brand-cyan px-2 py-0.5 rounded-md bg-brand-cyan/10 inline-block mb-1">${track.category}</span>
+                        <h4 class="font-bold text-sm text-white truncate">${track.title}</h4>
+                        <p class="text-xs text-slate-400 truncate">${track.artist}</p>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function playTrackById(id) {
+            const index = tracks.findIndex(t => t.id === id);
+            if (index !== -1) {
+                if (currentTrackIndex === index && isPlaying) {
+                    pauseAudio();
+                } else {
+                    currentTrackIndex = index;
+                    loadAndPlayTrack();
+                }
+            }
+        }
+
+        function loadAndPlayTrack() {
+            const track = tracks[currentTrackIndex];
+            playerTitle.innerText = track.title;
+            playerArtist.innerText = track.artist;
+            playerCover.src = track.cover;
+            
+            coverSpinner.classList.remove('hidden');
+            coverSpinner.classList.add('flex');
+
+            audio.src = track.audioUrl;
+            audio.play().then(() => {
+                isPlaying = true;
+                updatePlayBtn();
+                coverSpinner.classList.add('hidden');
+                coverSpinner.classList.remove('flex');
+                renderTracks();
+            }).catch(err => {
+                console.error("Erreur de lecture :", err);
+                coverSpinner.classList.add('hidden');
+                coverSpinner.classList.remove('flex');
+            });
+        }
+
+        function togglePlay() {
+            if (currentTrackIndex === -1 && tracks.length > 0) {
+                currentTrackIndex = 0;
+                loadAndPlayTrack();
+                return;
+            }
+            if (isPlaying) {
+                pauseAudio();
+            } else {
+                audio.play();
+                isPlaying = true;
+                updatePlayBtn();
+            }
+        }
+
+        function pauseAudio() {
+            audio.pause();
+            isPlaying = false;
+            updatePlayBtn();
+            renderTracks();
+        }
+
+        function updatePlayBtn() {
+            if (isPlaying) {
+                playBtn.innerHTML = '<i class="fa-solid fa-pause text-lg"></i>';
+            } else {
+                playBtn.innerHTML = '<i class="fa-solid fa-play text-lg pl-0.5"></i>';
+            }
+        }
+
+        function playNext() {
+            if (tracks.length === 0) return;
+            if (isShuffle) {
+                currentTrackIndex = Math.floor(Math.random() * tracks.length);
+            } else {
+                currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
+            }
+            loadAndPlayTrack();
+        }
+
+        function playPrevious() {
+            if (tracks.length === 0) return;
+            currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
+            loadAndPlayTrack();
+        }
+
+        function playAllHardtekk() {
+            filterCategory('HARDTEKK');
+            currentTrackIndex = 0;
+            loadAndPlayTrack();
+        }
+
+        function filterCategory(cat) {
+            currentFilter = cat;
+            document.getElementById('section-title').innerText = cat === 'ALL' ? 'Tous les titres' : `Pistes ${cat}`;
+            renderTracks();
+        }
+
+        function searchTracks() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const grid = document.getElementById('track-grid');
+            grid.innerHTML = '';
+
+            const filtered = tracks.filter(t => t.title.toLowerCase().includes(query) || t.artist.toLowerCase().includes(query));
+            
+            filtered.forEach(track => {
+                const card = document.createElement('div');
+                card.className = "glass-card rounded-2xl p-4 flex flex-col justify-between group cursor-pointer";
+                card.onclick = () => playTrackById(track.id);
+                card.innerHTML = `
+                    <div class="relative aspect-square rounded-xl overflow-hidden mb-3 bg-slate-800">
+                        <img src="${track.cover}" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm text-white truncate">${track.title}</h4>
+                        <p class="text-xs text-slate-400">${track.artist}</p>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        audio.addEventListener('timeupdate', () => {
+            if (audio.duration) {
+                const progress = (audio.currentTime / audio.duration) * 100;
+                seekBar.value = progress;
+                currentTimeEl.innerText = formatTime(audio.currentTime);
+                totalTimeEl.innerText = formatTime(audio.duration);
+            }
+        });
+
+        audio.addEventListener('ended', () => {
+            if (isRepeat) {
+                audio.currentTime = 0;
+                audio.play();
+            } else {
+                playNext();
+            }
+        });
+
+        function seekAudio(value) {
+            if (audio.duration) {
+                audio.currentTime = (value / 100) * audio.duration;
+            }
+        }
+
+        function setVolume(value) {
+            audio.volume = value / 100;
+        }
+
+        function formatTime(seconds) {
+            const min = Math.floor(seconds / 60);
+            const sec = Math.floor(seconds % 60);
+            return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+        }
+
+        function toggleShuffle() {
+            isShuffle = !isShuffle;
+            document.getElementById('shuffle-btn').classList.toggle('text-brand-cyan', isShuffle);
+        }
+
+        function toggleRepeat() {
+            isRepeat = !isRepeat;
+            document.getElementById('repeat-btn').classList.toggle('text-brand-cyan', isRepeat);
+        }
+
+        function toggleMute() {
+            audio.muted = !audio.muted;
+            document.getElementById('mute-btn').innerHTML = audio.muted ? '<i class="fa-solid fa-volume-xmark"></i>' : '<i class="fa-solid fa-volume-high"></i>';
+        }
+
+        // Initialize display
+        renderTracks();
+    </script>
+</body>
+</html>
