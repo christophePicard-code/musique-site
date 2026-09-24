@@ -151,7 +151,7 @@
                     <div class="space-y-1" id="sidebar-categories">
                         <button onclick="filterCategory('HARDTEKK')" class="category-btn active w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium transition-all bg-gradient-to-r from-brand-purple/40 to-brand-cyan/20 text-white border border-brand-cyan/30">
                             <span class="flex items-center gap-2"><i class="fa-solid fa-bolt text-brand-cyan"></i> HARDTEKK</span>
-                            <span class="text-xs bg-brand-cyan/20 text-brand-cyan px-2 py-0.5 rounded-full font-bold">5</span>
+                            <span class="text-xs bg-brand-cyan/20 text-brand-cyan px-2 py-0.5 rounded-full font-bold">6</span>
                         </button>
                         <button onclick="filterCategory('TECHNO')" class="category-btn w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all">
                             <span class="flex items-center gap-2"><i class="fa-solid fa-wave-square"></i> TECHNO</span>
@@ -208,7 +208,7 @@
                         Écoutez vos morceaux Hardtekk hébergés directement depuis votre dépôt GitHub avec égaliseur sonore et spectromètre en temps réel.
                     </p>
                     <button onclick="playAllHardtekk()" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-brand-cyan to-blue-600 text-slate-950 font-bold hover:brightness-110 transition-all shadow-lg shadow-brand-cyan/25 flex items-center gap-2">
-                        <i class="fa-solid fa-play"></i> Lancer la Playlist
+                        <i class="fa-solid fa-play"></i> Lancer la Playlist (6 Titres)
                     </button>
                 </div>
             </section>
@@ -219,7 +219,7 @@
                     Tous
                 </button>
                 <button onclick="filterCategory('HARDTEKK')" class="pill-btn active px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-brand-cyan text-slate-950 font-bold shadow-md shadow-brand-cyan/20 transition-all">
-                    ⚡ HARDTEKK (5)
+                    ⚡ HARDTEKK (6)
                 </button>
                 <button onclick="filterCategory('TECHNO')" class="pill-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-white/5 border border-white/10 text-slate-300 hover:text-white transition-all">
                     🎹 TECHNO
@@ -237,17 +237,16 @@
                 <h3 class="text-xl font-bold text-white flex items-center gap-2" id="section-title">
                     <i class="fa-solid fa-compact-disc text-brand-cyan"></i> Pistes HARDTEKK
                 </h3>
-                <span id="track-count" class="text-xs text-slate-400 font-medium">5 titres disponibles</span>
+                <span id="track-count" class="text-xs text-slate-400 font-medium">6 titres disponibles</span>
             </div>
 
             <!-- Track Grid -->
             <div id="track-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                <!-- Dynamiquement peuplé -->
+                <!-- Track Cards dynamically populated by JS -->
             </div>
         </main>
     </div>
 
-    <!-- Player Bar -->
     <footer class="fixed bottom-0 left-0 right-0 glass-panel border-t border-white/10 px-4 py-3 md:px-8 md:py-4 z-50">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
             
@@ -333,7 +332,6 @@
         </div>
     </footer>
 
-    <!-- Equalizer Panel -->
     <div id="eq-panel" class="hidden fixed bottom-24 right-4 md:right-8 w-80 glass-panel rounded-2xl p-5 border border-white/15 shadow-2xl z-50 backdrop-blur-xl transition-all">
         <div class="flex items-center justify-between mb-4 border-b border-white/10 pb-3">
             <h3 class="font-bold text-sm text-white flex items-center gap-2">
@@ -344,6 +342,7 @@
             </button>
         </div>
 
+        <!-- EQ Presets -->
         <div class="mb-4">
             <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-2">Préréglages rapides</span>
             <div class="grid grid-cols-4 gap-1.5">
@@ -354,6 +353,7 @@
             </div>
         </div>
 
+        <!-- Frequency Sliders -->
         <div class="space-y-4">
             <div>
                 <div class="flex justify-between items-center text-xs mb-1">
@@ -392,9 +392,10 @@
     </div>
 
     <!-- Audio Element -->
-    <audio id="audio-element" crossorigin="anonymous" preload="auto"></audio>
+    <audio id="audio-element" preload="auto"></audio>
 
     <script>
+        // High quality electronic album art fallbacks from Unsplash
         const fallbackCovers = [
             "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&q=80",
             "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=500&q=80",
@@ -406,12 +407,12 @@
         const tracks = [
             {
                 id: 1,
-                title: "SOMETIMES",
+                title: "SOMETIMES (HARDTEKK)",
                 artist: "Hardtekk Producer",
                 category: "HARDTEKK",
                 cover: "https://cdn.jsdelivr.net/gh/christophePicard-code/musique-site@main/thumb_SOMETIMES.png",
                 fallbackCover: fallbackCovers[0],
-                url: "https://cdn.jsdelivr.net/gh/christophePicard-code/musique-site@main/SOMETIMES(HARDTEKK).mp3"
+                fileName: "SOMETIMES(HARDTEKK).mp3"
             },
             {
                 id: 2,
@@ -420,38 +421,48 @@
                 category: "HARDTEKK",
                 cover: "https://cdn.jsdelivr.net/gh/christophePicard-code/musique-site@main/thumb_CARAMEL%20JESTER%20-%20UMBRELLA.png",
                 fallbackCover: fallbackCovers[1],
-                url: "https://cdn.jsdelivr.net/gh/christophePicard-code/musique-site@main/CARAMEL%20JESTER%20-%20UMBRELLA(HARDTEKK).mp3"
+                fileName: "CARAMEL JESTER - UMBRELLA(HARDTEKK).mp3"
             },
             {
                 id: 3,
-                title: "COOL",
+                title: "COOL (HARDTEKK)",
                 artist: "Hardtekk Artist",
                 category: "HARDTEKK",
                 cover: "https://cdn.jsdelivr.net/gh/christophePicard-code/musique-site@main/thumb_COOL.png",
                 fallbackCover: fallbackCovers[2],
-                url: "https://cdn.jsdelivr.net/gh/christophePicard-code/musique-site@main/COOL(HARDTEKK).mp3"
+                fileName: "COOL(HARDTEKK).mp3"
             },
             {
                 id: 4,
-                title: "Eins Zwei Polizei",
+                title: "Eins Zwei Polizei (HARDTEKK)",
                 artist: "Hardtekk Remix",
                 category: "HARDTEKK",
                 cover: "https://cdn.jsdelivr.net/gh/christophePicard-code/musique-site@main/thumb_Eins%20Zwei%20Polizei.png",
                 fallbackCover: fallbackCovers[3],
-                url: "https://cdn.jsdelivr.net/gh/christophePicard-code/musique-site@main/Eins%20Zwei%20Polizei(HARDTEKK).mp3"
+                fileName: "Eins Zwei Polizei(HARDTEKK).mp3"
             },
             {
                 id: 5,
-                title: "ON THE FLOOR",
+                title: "UNDRESS REHEARSAL (HARDTEKK)",
+                artist: "Hardtekk Producer",
+                category: "HARDTEKK",
+                cover: "https://cdn.jsdelivr.net/gh/christophePicard-code/musique-site@main/thumb_UNDRESS%20REHEARSAL.png",
+                fallbackCover: fallbackCovers[4],
+                fileName: "UNDRESS REHEARSAL(HARDTEKK).mp3"
+            },
+            {
+                id: 6,
+                title: "ON THE FLOOR (HARDTEKK)",
                 artist: "Hardtekk Remix",
                 category: "HARDTEKK",
                 cover: "https://cdn.jsdelivr.net/gh/christophePicard-code/musique-site@main/thumb_ON%20THE%20FLOOR.png",
                 fallbackCover: fallbackCovers[0],
-                url: "https://cdn.jsdelivr.net/gh/christophePicard-code/musique-site@main/ON%20THE%20FLOOR(HARDTEKK).mp3"
+                fileName: "ON THE FLOOR(HARDTEKK).mp3"
             }
         ];
 
         let currentTrackIndex = -1;
+        let activeFallbackIndex = 0;
         let isPlaying = false;
         let isShuffle = false;
         let isRepeat = false;
@@ -462,6 +473,7 @@
         const playerTitle = document.getElementById('player-title');
         const playerArtist = document.getElementById('player-artist');
         const playerCover = document.getElementById('player-cover');
+        const coverSpinner = document.getElementById('cover-spinner');
         const seekBar = document.getElementById('seek-bar');
         const currentTimeEl = document.getElementById('current-time');
         const totalTimeEl = document.getElementById('total-time');
@@ -470,17 +482,22 @@
         let analyser = null;
         let audioSource = null;
         let dataArray = null;
+
         let bassFilter = null;
         let midFilter = null;
         let trebleFilter = null;
         let isAudioContextBound = false;
 
+        // Image error handler: first try Unsplash cover fallback, if that fails show styled gradient div
         function handleImageError(img, trackTitle = 'HARDTEKK', fallbackUrl = '') {
-            img.onerror = null;
+            img.onerror = null; // Prevent infinite error loops
+
             if (fallbackUrl && img.src !== fallbackUrl) {
                 img.src = fallbackUrl;
                 return;
             }
+
+            // Replace missing image with a stylish synthetic gradient cover
             const parent = img.parentElement;
             if (parent) {
                 img.style.display = 'none';
@@ -515,211 +532,366 @@
         }
 
         function initAudioContext() {
-            if (isAudioContextBound) return;
-            try {
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                audioCtx = new AudioContext();
+            if (!audioCtx) {
+                try {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    audioCtx = new AudioContext();
 
-                bassFilter = audioCtx.createBiquadFilter();
-                bassFilter.type = 'lowshelf';
-                bassFilter.frequency.value = 250;
+                    bassFilter = audioCtx.createBiquadFilter();
+                    bassFilter.type = 'lowshelf';
+                    bassFilter.frequency.value = 250;
 
-                midFilter = audioCtx.createBiquadFilter();
-                midFilter.type = 'peaking';
-                midFilter.frequency.value = 1500;
-                midFilter.Q.value = 1;
+                    midFilter = audioCtx.createBiquadFilter();
+                    midFilter.type = 'peaking';
+                    midFilter.frequency.value = 1500;
+                    midFilter.Q.value = 1;
 
-                trebleFilter = audioCtx.createBiquadFilter();
-                trebleFilter.type = 'highshelf';
-                trebleFilter.frequency.value = 4000;
+                    trebleFilter = audioCtx.createBiquadFilter();
+                    trebleFilter.type = 'highshelf';
+                    trebleFilter.frequency.value = 4000;
 
-                analyser = audioCtx.createAnalyser();
-                analyser.fftSize = 128;
+                    analyser = audioCtx.createAnalyser();
+                    analyser.fftSize = 128;
 
-                audioSource = audioCtx.createMediaElementSource(audio);
-                audioSource.connect(bassFilter);
-                bassFilter.connect(midFilter);
-                midFilter.connect(trebleFilter);
-                trebleFilter.connect(analyser);
-                analyser.connect(audioCtx.destination);
-
-                dataArray = new Uint8Array(analyser.frequencyBinCount);
-                isAudioContextBound = true;
-                drawVisualizer();
-            } catch (e) {
-                console.warn("Échec d'initialisation de l'AudioContext:", e);
+                    dataArray = new Uint8Array(analyser.frequencyBinCount);
+                } catch (e) {
+                    console.warn("Web Audio API non disponible :", e);
+                }
             }
-        }
-
-        function renderTracks() {
-            const grid = document.getElementById('track-grid');
-            grid.innerHTML = '';
-
-            const filtered = tracks.filter(t => {
-                if (currentFilter === 'ALL') return true;
-                return t.category === currentFilter;
-            });
-
-            document.getElementById('track-count').textContent = `${filtered.length} titre(s) disponible(s)`;
-
-            filtered.forEach((track) => {
-                const globalIndex = tracks.findIndex(t => t.id === track.id);
-                const isCurrent = globalIndex === currentTrackIndex;
-
-                const card = document.createElement('div');
-                card.className = `glass-card rounded-2xl p-4 flex flex-col justify-between relative group cursor-pointer ${isCurrent ? 'border-brand-cyan/50 bg-white/10' : ''}`;
-                card.onclick = () => playTrack(globalIndex);
-
-                card.innerHTML = `
-                    <div class="relative w-full aspect-square rounded-xl overflow-hidden mb-3 bg-slate-900 border border-white/5">
-                        <img src="${track.cover}" alt="${track.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="handleImageError(this, '${track.title.replace(/'/g, "\\'")}', '${track.fallbackCover}')">
-                        <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <div class="w-12 h-12 rounded-full bg-brand-cyan text-slate-950 flex items-center justify-center shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all">
-                                <i class="fa-solid ${isCurrent && isPlaying ? 'fa-pause' : 'fa-play'} text-lg pl-0.5"></i>
-                            </div>
-                        </div>
-                        ${isCurrent && isPlaying ? `
-                            <div class="absolute top-2 right-2 px-2 py-1 rounded-md bg-brand-cyan text-slate-950 text-[10px] font-bold flex items-center gap-1">
-                                <span class="w-1.5 h-1.5 rounded-full bg-slate-950 animate-ping"></span> LECTURE
-                            </div>
-                        ` : ''}
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-sm text-white truncate">${track.title}</h4>
-                        <p class="text-xs text-slate-400 truncate mt-0.5">${track.artist}</p>
-                    </div>
-                    <div class="flex items-center justify-between mt-3 pt-2 border-t border-white/5 text-[11px] text-slate-400">
-                        <span class="px-2 py-0.5 rounded-md bg-white/5 border border-white/10 font-mono text-[10px] text-brand-cyan">${track.category}</span>
-                        <i class="fa-solid fa-circle-play text-slate-500 group-hover:text-brand-cyan transition-colors"></i>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function playTrack(index) {
-            if (index < 0 || index >= tracks.length) return;
-            initAudioContext();
 
             if (audioCtx && audioCtx.state === 'suspended') {
                 audioCtx.resume();
             }
 
-            if (currentTrackIndex === index && isPlaying) {
-                audio.pause();
+            if (audioCtx && !isAudioContextBound && audio) {
+                try {
+                    audioSource = audioCtx.createMediaElementSource(audio);
+                    audioSource.connect(bassFilter);
+                    bassFilter.connect(midFilter);
+                    midFilter.connect(trebleFilter);
+                    trebleFilter.connect(analyser);
+                    analyser.connect(audioCtx.destination);
+                    isAudioContextBound = true;
+                } catch (corsErr) {
+                    console.warn("Web Audio source connexion directe :", corsErr);
+                }
+            }
+        }
+
+        function getTrackSources(fileName) {
+            const repoUser = "christophePicard-code";
+            const repoName = "musique-site";
+            const branch = "main";
+            const encodedFile = encodeURIComponent(fileName).replace(/%20/g, '%20');
+
+            return [
+                `https://cdn.jsdelivr.net/gh/${repoUser}/${repoName}@${branch}/${encodedFile}`,
+                `https://raw.githubusercontent.com/${repoUser}/${repoName}/${branch}/${encodedFile}`,
+                `https://media.githubusercontent.com/media/${repoUser}/${repoName}/${branch}/${encodedFile}`
+            ];
+        }
+
+        function playTrackById(id) {
+            dismissError();
+            const index = tracks.findIndex(t => t.id === id);
+            if (index !== -1) {
+                if (currentTrackIndex === index && isPlaying) {
+                    pauseAudio();
+                } else {
+                    currentTrackIndex = index;
+                    activeFallbackIndex = 0;
+                    loadAndPlayTrack();
+                }
+            }
+        }
+
+        function loadAndPlayTrack() {
+            dismissError();
+            initAudioContext();
+
+            const track = tracks[currentTrackIndex];
+            if (!track) return;
+
+            playerTitle.innerText = track.title;
+            playerArtist.innerText = track.artist;
+            
+            // Reset player cover image display
+            playerCover.style.display = 'block';
+            const existingFallback = playerCover.parentElement.querySelector('.gradient-cover-fallback');
+            if (existingFallback) existingFallback.remove();
+
+            playerCover.src = track.cover;
+            playerCover.onerror = function() {
+                handleImageError(this, track.title, track.fallbackCover);
+            };
+            
+            coverSpinner.classList.remove('hidden');
+            coverSpinner.classList.add('flex');
+
+            const sources = getTrackSources(track.fileName);
+            const currentSourceUrl = sources[activeFallbackIndex] || sources[0];
+
+            if (activeFallbackIndex === 0) {
+                audio.crossOrigin = "anonymous";
+            } else {
+                audio.removeAttribute("crossorigin");
+            }
+
+            audio.src = currentSourceUrl;
+            audio.load();
+
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    isPlaying = true;
+                    updatePlayBtn();
+                    coverSpinner.classList.add('hidden');
+                    coverSpinner.classList.remove('flex');
+                    renderTracks();
+                    startVisualizerAnimation();
+                }).catch(err => {
+                    console.warn(`Échec de lecture depuis (${currentSourceUrl}) :`, err);
+                    handlePlaybackFallback();
+                });
+            }
+        }
+
+        function handlePlaybackFallback() {
+            const track = tracks[currentTrackIndex];
+            if (!track) return;
+
+            const sources = getTrackSources(track.fileName);
+            if (activeFallbackIndex < sources.length - 1) {
+                activeFallbackIndex++;
+                loadAndPlayTrack();
+            } else {
+                isPlaying = false;
+                updatePlayBtn();
+                coverSpinner.classList.add('hidden');
+                coverSpinner.classList.remove('flex');
+                showError(`<strong>Fichier MP3 non trouvé :</strong> Vérifiez le fichier <code>${track.fileName}</code> dans la branche <code>main</code> de votre dépôt GitHub.`);
+            }
+        }
+
+        audio.onerror = function(e) {
+            console.warn("Erreur sur l'élément audio :", e);
+            handlePlaybackFallback();
+        };
+
+        function togglePlay() {
+            dismissError();
+            initAudioContext();
+            
+            if (currentTrackIndex === -1 && tracks.length > 0) {
+                currentTrackIndex = 0;
+                activeFallbackIndex = 0;
+                loadAndPlayTrack();
                 return;
             }
 
-            currentTrackIndex = index;
-            const track = tracks[index];
+            if (isPlaying) {
+                pauseAudio();
+            } else {
+                audio.play().then(() => {
+                    isPlaying = true;
+                    updatePlayBtn();
+                    renderTracks();
+                    startVisualizerAnimation();
+                }).catch(err => {
+                    handlePlaybackFallback();
+                });
+            }
+        }
 
-            playerTitle.textContent = track.title;
-            playerArtist.textContent = track.artist;
-            playerCover.src = track.cover;
-            playerCover.onerror = () => handleImageError(playerCover, track.title, track.fallbackCover);
-
-            audio.src = track.url;
-            audio.play().then(() => {
-                dismissError();
-            }).catch(err => {
-                showError("Erreur de chargement audio. Vérifiez le lien source.");
-            });
-
+        function pauseAudio() {
+            audio.pause();
+            isPlaying = false;
+            updatePlayBtn();
             renderTracks();
         }
 
-        function togglePlay() {
-            if (currentTrackIndex === -1 && tracks.length > 0) {
-                playTrack(0);
-                return;
-            }
-            if (!audio.src) return;
-
-            initAudioContext();
-            if (audioCtx && audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-
-            if (audio.paused) {
-                audio.play();
+        function updatePlayBtn() {
+            if (isPlaying) {
+                playBtn.innerHTML = '<i class="fa-solid fa-pause text-lg"></i>';
             } else {
-                audio.pause();
+                playBtn.innerHTML = '<i class="fa-solid fa-play text-lg pl-0.5"></i>';
             }
         }
 
         function playNext() {
             if (tracks.length === 0) return;
             if (isShuffle) {
-                let next;
-                do {
-                    next = Math.floor(Math.random() * tracks.length);
-                } while (next === currentTrackIndex && tracks.length > 1);
-                playTrack(next);
+                currentTrackIndex = Math.floor(Math.random() * tracks.length);
             } else {
-                let next = (currentTrackIndex + 1) % tracks.length;
-                playTrack(next);
+                currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
             }
+            activeFallbackIndex = 0;
+            loadAndPlayTrack();
         }
 
         function playPrevious() {
             if (tracks.length === 0) return;
-            let prev = (currentTrackIndex - 1 + tracks.length) % tracks.length;
-            playTrack(prev);
+            currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
+            activeFallbackIndex = 0;
+            loadAndPlayTrack();
         }
 
         function playAllHardtekk() {
-            const firstTekkIndex = tracks.findIndex(t => t.category === 'HARDTEKK');
-            if (firstTekkIndex !== -1) {
-                filterCategory('HARDTEKK');
-                playTrack(firstTekkIndex);
-            }
+            filterCategory('HARDTEKK');
+            currentTrackIndex = 0;
+            activeFallbackIndex = 0;
+            loadAndPlayTrack();
         }
 
         function filterCategory(cat) {
             currentFilter = cat;
-            document.querySelectorAll('.pill-btn, .category-btn').forEach(btn => {
-                btn.classList.remove('active', 'bg-brand-cyan', 'text-slate-950', 'font-bold');
-            });
+            document.getElementById('section-title').innerText = cat === 'ALL' ? 'Tous les titres' : `Pistes ${cat}`;
             renderTracks();
+        }
+
+        function renderTracks() {
+            const grid = document.getElementById('track-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            const filtered = currentFilter === 'ALL' 
+                ? tracks 
+                : tracks.filter(t => t.category === currentFilter);
+
+            const countEl = document.getElementById('track-count');
+            if (countEl) {
+                countEl.innerText = `${filtered.length} titre${filtered.length > 1 ? 's' : ''} disponible${filtered.length > 1 ? 's' : ''}`;
+            }
+
+            document.querySelectorAll('.pill-btn').forEach(btn => {
+                const text = btn.textContent.trim().toUpperCase();
+                let categoryMatch = false;
+                if (currentFilter === 'ALL' && text.includes('TOUS')) categoryMatch = true;
+                else if (currentFilter !== 'ALL' && text.includes(currentFilter)) categoryMatch = true;
+
+                if (categoryMatch) {
+                    btn.className = "pill-btn active px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-brand-cyan text-slate-950 font-bold shadow-md shadow-brand-cyan/20 transition-all";
+                } else {
+                    btn.className = "pill-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-white/5 border border-white/10 text-slate-300 hover:text-white transition-all";
+                }
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12 text-slate-400">
+                        <i class="fa-solid fa-music text-4xl mb-3 block text-slate-600"></i>
+                        <p class="text-sm font-medium">Aucun titre disponible dans cette catégorie pour le moment.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(track => {
+                const isCurrent = currentTrackIndex !== -1 && tracks[currentTrackIndex]?.id === track.id;
+                const card = document.createElement('div');
+                card.className = `glass-card rounded-2xl p-4 flex flex-col justify-between group cursor-pointer relative overflow-hidden transition-all duration-300 ${isCurrent ? 'border-brand-cyan/60 bg-white/10 shadow-lg shadow-brand-cyan/10' : ''}`;
+                
+                card.onclick = () => playTrackById(track.id);
+
+                card.innerHTML = `
+                    <div class="relative aspect-square rounded-xl overflow-hidden mb-3 bg-slate-800 group flex items-center justify-center">
+                        <img src="${track.cover}" alt="${track.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 relative z-10" onerror="handleImageError(this, '${track.title.replace(/'/g, "\\'")}', '${track.fallbackCover}')">
+                        <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-20 ${isCurrent ? '!opacity-100 bg-slate-950/50' : ''}">
+                            <div class="w-12 h-12 rounded-full bg-brand-cyan text-slate-950 flex items-center justify-center shadow-lg shadow-brand-cyan/40 hover:scale-110 transition-transform">
+                                <i class="fa-solid ${isCurrent && isPlaying ? 'fa-pause text-xl' : 'fa-play text-xl pl-1'}"></i>
+                            </div>
+                        </div>
+                        ${isCurrent && isPlaying ? `
+                            <div class="absolute top-2 right-2 px-2 py-1 bg-brand-cyan text-slate-950 font-bold text-[10px] rounded-full flex items-center gap-1 shadow-md z-30">
+                                <span class="w-1.5 h-1.5 rounded-full bg-slate-950 animate-ping"></span> EN LECTURE
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-1">
+                            <h4 class="font-bold text-sm text-white truncate ${isCurrent ? 'text-brand-cyan' : ''}">${track.title}</h4>
+                            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-white/10 text-slate-300">${track.category}</span>
+                        </div>
+                        <p class="text-xs text-slate-400 truncate">${track.artist}</p>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function startVisualizerAnimation() {
+            const canvas = document.getElementById('visualizer');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            function draw() {
+                if (!isPlaying) return;
+                requestAnimationFrame(draw);
+
+                canvas.width = canvas.clientWidth;
+                canvas.height = canvas.clientHeight;
+
+                if (analyser && dataArray) {
+                    analyser.getByteFrequencyData(dataArray);
+
+                    let bassAvg = 0, midAvg = 0, trebleAvg = 0;
+                    for (let i = 0; i < 4; i++) bassAvg += dataArray[i];
+                    for (let i = 4; i < 16; i++) midAvg += dataArray[i];
+                    for (let i = 16; i < 32; i++) trebleAvg += dataArray[i];
+
+                    document.getElementById('meter-bass').style.width = Math.min(100, (bassAvg / 4 / 255) * 100) + '%';
+                    document.getElementById('meter-mid').style.width = Math.min(100, (midAvg / 12 / 255) * 100) + '%';
+                    document.getElementById('meter-treble').style.width = Math.min(100, (trebleAvg / 16 / 255) * 100) + '%';
+
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    const barWidth = (canvas.width / dataArray.length) * 1.5;
+                    let x = 0;
+
+                    for (let i = 0; i < dataArray.length; i++) {
+                        const barHeight = (dataArray[i] / 255) * canvas.height;
+                        const gradient = ctx.createLinearGradient(0, canvas.height, 0, 0);
+                        gradient.addColorStop(0, '#00f2fe');
+                        gradient.addColorStop(1, '#ff0080');
+
+                        ctx.fillStyle = gradient;
+                        ctx.fillRect(x, canvas.height - barHeight, barWidth - 1, barHeight);
+                        x += barWidth + 1;
+                    }
+                }
+            }
+            draw();
         }
 
         function searchTracks() {
             const query = document.getElementById('search-input').value.toLowerCase();
-            const cards = document.querySelectorAll('#track-grid > div');
+            const grid = document.getElementById('track-grid');
+            grid.innerHTML = '';
+
+            const filtered = tracks.filter(t => t.title.toLowerCase().includes(query) || t.artist.toLowerCase().includes(query));
             
-            tracks.forEach((track, i) => {
-                const match = track.title.toLowerCase().includes(query) || track.artist.toLowerCase().includes(query);
-                if (cards[i]) {
-                    cards[i].style.display = match ? 'flex' : 'none';
-                }
+            filtered.forEach(track => {
+                const card = document.createElement('div');
+                card.className = "glass-card rounded-2xl p-4 flex flex-col justify-between group cursor-pointer";
+                card.onclick = () => playTrackById(track.id);
+                card.innerHTML = `
+                    <div class="relative aspect-square rounded-xl overflow-hidden mb-3 bg-slate-800 flex items-center justify-center">
+                        <img src="${track.cover}" class="w-full h-full object-cover" onerror="handleImageError(this, '${track.title.replace(/'/g, "\\'")}', '${track.fallbackCover}')">
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm text-white truncate">${track.title}</h4>
+                        <p class="text-xs text-slate-400">${track.artist}</p>
+                    </div>
+                `;
+                grid.appendChild(card);
             });
         }
 
-        function formatTime(seconds) {
-            if (isNaN(seconds)) return "0:00";
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-        }
-
-        audio.addEventListener('play', () => {
-            isPlaying = true;
-            playBtn.innerHTML = '<i class="fa-solid fa-pause text-lg"></i>';
-            renderTracks();
-        });
-
-        audio.addEventListener('pause', () => {
-            isPlaying = false;
-            playBtn.innerHTML = '<i class="fa-solid fa-play text-lg pl-0.5"></i>';
-            renderTracks();
-        });
-
         audio.addEventListener('timeupdate', () => {
             if (audio.duration) {
-                const pct = (audio.currentTime / audio.duration) * 100;
-                seekBar.value = pct;
-                currentTimeEl.textContent = formatTime(audio.currentTime);
-                totalTimeEl.textContent = formatTime(audio.duration);
+                const progress = (audio.currentTime / audio.duration) * 100;
+                seekBar.value = progress;
+                currentTimeEl.innerText = formatTime(audio.currentTime);
+                totalTimeEl.innerText = formatTime(audio.duration);
             }
         });
 
@@ -732,21 +904,20 @@
             }
         });
 
-        function seekAudio(val) {
+        function seekAudio(value) {
             if (audio.duration) {
-                audio.currentTime = (val / 100) * audio.duration;
+                audio.currentTime = (value / 100) * audio.duration;
             }
         }
 
-        function setVolume(val) {
-            audio.volume = val / 100;
+        function setVolume(value) {
+            audio.volume = value / 100;
         }
 
-        function toggleMute() {
-            audio.muted = !audio.muted;
-            document.getElementById('mute-btn').innerHTML = audio.muted ? 
-                '<i class="fa-solid fa-volume-xmark text-rose-400"></i>' : 
-                '<i class="fa-solid fa-volume-high"></i>';
+        function formatTime(seconds) {
+            const min = Math.floor(seconds / 60);
+            const sec = Math.floor(seconds % 60);
+            return `${min}:${sec < 10 ? '0' : ''}${sec}`;
         }
 
         function toggleShuffle() {
@@ -759,90 +930,52 @@
             document.getElementById('repeat-btn').classList.toggle('text-brand-cyan', isRepeat);
         }
 
+        function toggleMute() {
+            audio.muted = !audio.muted;
+            document.getElementById('mute-btn').innerHTML = audio.muted ? '<i class="fa-solid fa-volume-xmark"></i>' : '<i class="fa-solid fa-volume-high"></i>';
+        }
+
         function toggleEqPanel() {
-            document.getElementById('eq-panel').classList.toggle('hidden');
+            const panel = document.getElementById('eq-panel');
+            if (panel) panel.classList.toggle('hidden');
         }
 
         function updateBass(val) {
             if (bassFilter) bassFilter.gain.value = val;
-            document.getElementById('bass-val').textContent = `${val} dB`;
+            const el = document.getElementById('bass-val');
+            if (el) el.innerText = (val > 0 ? '+' : '') + val + ' dB';
         }
 
         function updateMid(val) {
             if (midFilter) midFilter.gain.value = val;
-            document.getElementById('mid-val').textContent = `${val} dB`;
+            const el = document.getElementById('mid-val');
+            if (el) el.innerText = (val > 0 ? '+' : '') + val + ' dB';
         }
 
         function updateTreble(val) {
             if (trebleFilter) trebleFilter.gain.value = val;
-            document.getElementById('treble-val').textContent = `${val} dB`;
+            const el = document.getElementById('treble-val');
+            if (el) el.innerText = (val > 0 ? '+' : '') + val + ' dB';
         }
 
-        function setEqPreset(type) {
-            let b = 0, m = 0, t = 0;
-            if (type === 'tekk') { b = 8; m = -2; t = 4; }
-            else if (type === 'club') { b = 5; m = 1; t = 3; }
-            else if (type === 'clarity') { b = -2; m = 4; t = 5; }
-
-            document.getElementById('bass-slider').value = b;
-            document.getElementById('mid-slider').value = m;
-            document.getElementById('treble-slider').value = t;
-
-            updateBass(b);
-            updateMid(m);
-            updateTreble(t);
+        function setEqPreset(preset) {
+            const presets = {
+                flat: [0, 0, 0],
+                tekk: [10, 2, 6],
+                club: [6, 0, 4],
+                clarity: [-2, 4, 6]
+            };
+            const vals = presets[preset] || presets.flat;
+            document.getElementById('bass-slider').value = vals[0];
+            document.getElementById('mid-slider').value = vals[1];
+            document.getElementById('treble-slider').value = vals[2];
+            updateBass(vals[0]);
+            updateMid(vals[1]);
+            updateTreble(vals[2]);
         }
 
-        function drawVisualizer() {
-            const canvas = document.getElementById('visualizer');
-            const ctx = canvas.getContext('2d');
-            
-            function render() {
-                requestAnimationFrame(render);
-                if (!analyser || !dataArray) return;
-
-                analyser.getByteFrequencyData(dataArray);
-
-                canvas.width = canvas.clientWidth;
-                canvas.height = canvas.clientHeight;
-
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                const barWidth = (canvas.width / dataArray.length) * 2.5;
-                let x = 0;
-
-                let bassSum = 0, midSum = 0, trebleSum = 0;
-                const third = Math.floor(dataArray.length / 3);
-
-                for (let i = 0; i < dataArray.length; i++) {
-                    const barHeight = (dataArray[i] / 255) * canvas.height;
-
-                    if (i < third) bassSum += dataArray[i];
-                    else if (i < third * 2) midSum += dataArray[i];
-                    else trebleSum += dataArray[i];
-
-                    const gradient = ctx.createLinearGradient(0, canvas.height, 0, 0);
-                    gradient.addColorStop(0, '#7928ca');
-                    gradient.addColorStop(0.5, '#00f2fe');
-                    gradient.addColorStop(1, '#ff0080');
-
-                    ctx.fillStyle = gradient;
-                    ctx.fillRect(x, canvas.height - barHeight, barWidth - 1, barHeight);
-
-                    x += barWidth;
-                }
-
-                document.getElementById('meter-bass').style.width = `${Math.min(100, (bassSum / (third * 255)) * 100)}%`;
-                document.getElementById('meter-mid').style.width = `${Math.min(100, (midSum / (third * 255)) * 100)}%`;
-                document.getElementById('meter-treble').style.width = `${Math.min(100, (trebleSum / (third * 255)) * 100)}%`;
-            }
-
-            render();
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            renderTracks();
-        });
+        // Initial render on page load
+        renderTracks();
     </script>
 </body>
 </html>
