@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="fr" class="dark">
 <head>
@@ -152,7 +151,7 @@
                     <div class="space-y-1" id="sidebar-categories">
                         <button onclick="filterCategory('HARDTEKK')" class="category-btn active w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium transition-all bg-gradient-to-r from-brand-purple/40 to-brand-cyan/20 text-white border border-brand-cyan/30">
                             <span class="flex items-center gap-2"><i class="fa-solid fa-bolt text-brand-cyan"></i> HARDTEKK</span>
-                            <span class="text-xs bg-brand-cyan/20 text-brand-cyan px-2 py-0.5 rounded-full font-bold">4</span>
+                            <span class="text-xs bg-brand-cyan/20 text-brand-cyan px-2 py-0.5 rounded-full font-bold">5</span>
                         </button>
                         <button onclick="filterCategory('TECHNO')" class="category-btn w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all">
                             <span class="flex items-center gap-2"><i class="fa-solid fa-wave-square"></i> TECHNO</span>
@@ -209,7 +208,7 @@
                         Écoutez vos morceaux Hardtekk hébergés directement depuis votre dépôt GitHub avec égaliseur sonore et spectromètre en temps réel.
                     </p>
                     <button onclick="playAllHardtekk()" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-brand-cyan to-blue-600 text-slate-950 font-bold hover:brightness-110 transition-all shadow-lg shadow-brand-cyan/25 flex items-center gap-2">
-                        <i class="fa-solid fa-play"></i> Lancer la Playlist (4 Titres)
+                        <i class="fa-solid fa-play"></i> Lancer la Playlist (5 Titres)
                     </button>
                 </div>
             </section>
@@ -220,7 +219,7 @@
                     Tous
                 </button>
                 <button onclick="filterCategory('HARDTEKK')" class="pill-btn active px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-brand-cyan text-slate-950 font-bold shadow-md shadow-brand-cyan/20 transition-all">
-                    ⚡ HARDTEKK (4)
+                    ⚡ HARDTEKK (5)
                 </button>
                 <button onclick="filterCategory('TECHNO')" class="pill-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-white/5 border border-white/10 text-slate-300 hover:text-white transition-all">
                     🎹 TECHNO
@@ -393,7 +392,7 @@
     </div>
 
     <!-- Audio Element with explicit CORS support -->
-    <audio id="audio-element" crossorigin="anonymous" preload="auto"></audio>
+    <audio id="audio-element" preload="auto"></audio>
 
     <script>
         const tracks = [
@@ -403,7 +402,7 @@
                 artist: "Hardtekk Producer",
                 category: "HARDTEKK",
                 cover: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&auto=format&fit=crop&q=80",
-                audioUrl: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/SOMETIMES(HARDTEKK).mp3"
+                fileName: "SOMETIMES(HARDTEKK).mp3"
             },
             {
                 id: 2,
@@ -411,7 +410,7 @@
                 artist: "Caramel Jester",
                 category: "HARDTEKK",
                 cover: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&auto=format&fit=crop&q=80",
-                audioUrl: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/CARAMEL%20JESTER%20-%20UMBRELLA(HARDTEKK).mp3"
+                fileName: "CARAMEL JESTER - UMBRELLA(HARDTEKK).mp3"
             },
             {
                 id: 3,
@@ -419,7 +418,7 @@
                 artist: "Hardtekk Artist",
                 category: "HARDTEKK",
                 cover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&auto=format&fit=crop&q=80",
-                audioUrl: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/COOL(HARDTEKK).mp3"
+                fileName: "COOL(HARDTEKK).mp3"
             },
             {
                 id: 4,
@@ -427,11 +426,20 @@
                 artist: "Hardtekk Remix",
                 category: "HARDTEKK",
                 cover: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=300&auto=format&fit=crop&q=80",
-                audioUrl: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/Eins%20Zwei%20Polizei(HARDTEKK).mp3"
+                fileName: "Eins Zwei Polizei(HARDTEKK).mp3"
+            },
+            {
+                id: 5,
+                title: "UNDRESS REHEARSAL (HARDTEKK)",
+                artist: "Hardtekk Producer",
+                category: "HARDTEKK",
+                cover: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=300&auto=format&fit=crop&q=80",
+                fileName: "UNDRESS REHEARSAL(HARDTEKK).mp3"
             }
         ];
 
         let currentTrackIndex = -1;
+        let activeFallbackIndex = 0;
         let isPlaying = false;
         let isShuffle = false;
         let isRepeat = false;
@@ -455,12 +463,13 @@
         let bassFilter = null;
         let midFilter = null;
         let trebleFilter = null;
+        let isAudioContextBound = false;
 
         function showError(msg) {
             const toast = document.getElementById('error-toast');
             const toastText = document.getElementById('error-toast-text');
             if (toast && toastText) {
-                toastText.innerText = msg;
+                toastText.innerHTML = msg;
                 toast.classList.remove('hidden');
             }
         }
@@ -479,176 +488,57 @@
                     bassFilter = audioCtx.createBiquadFilter();
                     bassFilter.type = 'lowshelf';
                     bassFilter.frequency.value = 250;
-                    bassFilter.gain.value = parseFloat(document.getElementById('bass-slider')?.value || 0);
 
                     midFilter = audioCtx.createBiquadFilter();
                     midFilter.type = 'peaking';
                     midFilter.frequency.value = 1500;
                     midFilter.Q.value = 1;
-                    midFilter.gain.value = parseFloat(document.getElementById('mid-slider')?.value || 0);
 
                     trebleFilter = audioCtx.createBiquadFilter();
                     trebleFilter.type = 'highshelf';
                     trebleFilter.frequency.value = 4000;
-                    trebleFilter.gain.value = parseFloat(document.getElementById('treble-slider')?.value || 0);
 
                     analyser = audioCtx.createAnalyser();
                     analyser.fftSize = 128;
 
-                    // Ensure crossorigin is set on audio element
-                    audio.crossOrigin = "anonymous";
-                    audioSource = audioCtx.createMediaElementSource(audio);
+                    dataArray = new Uint8Array(analyser.frequencyBinCount);
+                } catch (e) {
+                    console.warn("Web Audio API non disponible :", e);
+                }
+            }
 
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            // Connect media element node only once to prevent InvalidStateError
+            if (audioCtx && !isAudioContextBound && audio) {
+                try {
+                    audioSource = audioCtx.createMediaElementSource(audio);
                     audioSource.connect(bassFilter);
                     bassFilter.connect(midFilter);
                     midFilter.connect(trebleFilter);
                     trebleFilter.connect(analyser);
                     analyser.connect(audioCtx.destination);
-
-                    dataArray = new Uint8Array(analyser.frequencyBinCount);
-                } catch (e) {
-                    console.warn("Web Audio API fallbacked:", e);
+                    isAudioContextBound = true;
+                } catch (corsErr) {
+                    console.warn("Web Audio source connexion échouée (mode direct actif) :", corsErr);
                 }
             }
-            if (audioCtx && audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
         }
 
-        function updateBass(val) {
-            const num = parseFloat(val);
-            const valEl = document.getElementById('bass-val');
-            if (valEl) valEl.innerText = (num > 0 ? '+' : '') + num + ' dB';
-            if (bassFilter && audioCtx) {
-                bassFilter.gain.setTargetAtTime(num, audioCtx.currentTime, 0.01);
-            }
+        function getTrackSources(fileName) {
+            const repoUser = "christophePicard-code";
+            const repoName = "musique-site";
+            const branch = "main";
+            const encodedFile = encodeURIComponent(fileName).replace(/%20/g, '%20');
+
+            return [
+                `https://cdn.jsdelivr.net/gh/${repoUser}/${repoName}@${branch}/${encodedFile}`,
+                `https://raw.githubusercontent.com/${repoUser}/${repoName}/${branch}/${encodedFile}`,
+                `https://media.githubusercontent.com/media/${repoUser}/${repoName}/${branch}/${encodedFile}`
+            ];
         }
-
-        function updateMid(val) {
-            const num = parseFloat(val);
-            const valEl = document.getElementById('mid-val');
-            if (valEl) valEl.innerText = (num > 0 ? '+' : '') + num + ' dB';
-            if (midFilter && audioCtx) {
-                midFilter.gain.setTargetAtTime(num, audioCtx.currentTime, 0.01);
-            }
-        }
-
-        function updateTreble(val) {
-            const num = parseFloat(val);
-            const valEl = document.getElementById('treble-val');
-            if (valEl) valEl.innerText = (num > 0 ? '+' : '') + num + ' dB';
-            if (trebleFilter && audioCtx) {
-                trebleFilter.gain.setTargetAtTime(num, audioCtx.currentTime, 0.01);
-            }
-        }
-
-        function setEqPreset(preset) {
-            let b = 0, m = 0, t = 0;
-            if (preset === 'tekk') { b = 10; m = 1; t = 6; }
-            else if (preset === 'club') { b = 6; m = 0; t = 4; }
-            else if (preset === 'clarity') { b = -3; m = 4; t = 7; }
-
-            const bSlider = document.getElementById('bass-slider');
-            const mSlider = document.getElementById('mid-slider');
-            const tSlider = document.getElementById('treble-slider');
-
-            if (bSlider) bSlider.value = b;
-            if (mSlider) mSlider.value = m;
-            if (tSlider) tSlider.value = t;
-
-            updateBass(b);
-            updateMid(m);
-            updateTreble(t);
-        }
-
-        function toggleEqPanel() {
-            const panel = document.getElementById('eq-panel');
-            if (panel) {
-                panel.classList.toggle('hidden');
-            }
-        }
-
-        const canvas = document.getElementById('visualizer');
-        const ctx = canvas.getContext('2d');
-
-        function resizeCanvas() {
-            if (canvas) {
-                canvas.width = canvas.offsetWidth;
-                canvas.height = canvas.offsetHeight;
-            }
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        function drawVisualizer() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            const meterBass = document.getElementById('meter-bass');
-            const meterMid = document.getElementById('meter-mid');
-            const meterTreble = document.getElementById('meter-treble');
-
-            if (analyser && isPlaying && dataArray) {
-                analyser.getByteFrequencyData(dataArray);
-
-                const totalBins = dataArray.length;
-                const bassBins = dataArray.slice(0, Math.floor(totalBins * 0.25));
-                const midBins = dataArray.slice(Math.floor(totalBins * 0.25), Math.floor(totalBins * 0.65));
-                const trebleBins = dataArray.slice(Math.floor(totalBins * 0.65));
-
-                const avgBass = bassBins.reduce((a, b) => a + b, 0) / (bassBins.length || 1);
-                const avgMid = midBins.reduce((a, b) => a + b, 0) / (midBins.length || 1);
-                const avgTreble = trebleBins.reduce((a, b) => a + b, 0) / (trebleBins.length || 1);
-
-                if (meterBass) meterBass.style.width = Math.min(100, (avgBass / 255) * 135) + '%';
-                if (meterMid) meterMid.style.width = Math.min(100, (avgMid / 255) * 135) + '%';
-                if (meterTreble) meterTreble.style.width = Math.min(100, (avgTreble / 255) * 135) + '%';
-
-                const barWidth = (canvas.width / totalBins) - 1.5;
-                for (let i = 0; i < totalBins; i++) {
-                    const value = dataArray[i];
-                    const barHeight = (value / 255) * canvas.height;
-                    const x = i * (barWidth + 1.5);
-                    const y = canvas.height - barHeight;
-
-                    let gradient;
-                    if (i < totalBins * 0.25) {
-                        gradient = ctx.createLinearGradient(0, y, 0, canvas.height);
-                        gradient.addColorStop(0, '#ff0080');
-                        gradient.addColorStop(1, '#7928ca');
-                    } else if (i < totalBins * 0.65) {
-                        gradient = ctx.createLinearGradient(0, y, 0, canvas.height);
-                        gradient.addColorStop(0, '#00f2fe');
-                        gradient.addColorStop(1, '#3b82f6');
-                    } else {
-                        gradient = ctx.createLinearGradient(0, y, 0, canvas.height);
-                        gradient.addColorStop(0, '#f59e0b');
-                        gradient.addColorStop(1, '#eab308');
-                    }
-
-                    ctx.fillStyle = gradient;
-                    ctx.beginPath();
-                    ctx.roundRect(x, y, Math.max(1, barWidth), barHeight, [2, 2, 0, 0]);
-                    ctx.fill();
-                }
-            } else {
-                if (meterBass) meterBass.style.width = '0%';
-                if (meterMid) meterMid.style.width = '0%';
-                if (meterTreble) meterTreble.style.width = '0%';
-
-                const barWidth = 4;
-                const gap = 3;
-                const barCount = Math.floor(canvas.width / (barWidth + gap));
-                for (let i = 0; i < barCount; i++) {
-                    const x = i * (barWidth + gap);
-                    const y = canvas.height - 3;
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
-                    ctx.fillRect(x, y, barWidth, 3);
-                }
-            }
-
-            requestAnimationFrame(drawVisualizer);
-        }
-        drawVisualizer();
 
         function playTrackById(id) {
             dismissError();
@@ -658,6 +548,7 @@
                     pauseAudio();
                 } else {
                     currentTrackIndex = index;
+                    activeFallbackIndex = 0;
                     loadAndPlayTrack();
                 }
             }
@@ -666,6 +557,7 @@
         function loadAndPlayTrack() {
             dismissError();
             initAudioContext();
+
             const track = tracks[currentTrackIndex];
             if (!track) return;
 
@@ -676,8 +568,17 @@
             coverSpinner.classList.remove('hidden');
             coverSpinner.classList.add('flex');
 
-            audio.crossOrigin = "anonymous";
-            audio.src = track.audioUrl;
+            const sources = getTrackSources(track.fileName);
+            const currentSourceUrl = sources[activeFallbackIndex] || sources[0];
+
+            // Set CORS attribute prior to setting src
+            if (activeFallbackIndex === 0) {
+                audio.crossOrigin = "anonymous";
+            } else {
+                audio.removeAttribute("crossorigin");
+            }
+
+            audio.src = currentSourceUrl;
             audio.load();
 
             const playPromise = audio.play();
@@ -688,33 +589,48 @@
                     coverSpinner.classList.add('hidden');
                     coverSpinner.classList.remove('flex');
                     renderTracks();
+                    startVisualizerAnimation();
                 }).catch(err => {
-                    console.error("Playback failed:", err);
-                    isPlaying = false;
-                    updatePlayBtn();
-                    coverSpinner.classList.add('hidden');
-                    coverSpinner.classList.remove('flex');
-                    showError("Impossible de lancer la musique. Cliquez à nouveau sur 'Play' ou vérifiez votre connexion.");
+                    console.warn(`Échec de lecture depuis (${currentSourceUrl}) :`, err);
+                    handlePlaybackFallback();
                 });
             }
         }
 
-        audio.onerror = function() {
-            coverSpinner.classList.add('hidden');
-            coverSpinner.classList.remove('flex');
-            isPlaying = false;
-            updatePlayBtn();
-            showError("Le fichier MP3 n'a pas pu être chargé depuis GitHub. Vérifiez que le fichier existe bien sur votre dépôt.");
+        function handlePlaybackFallback() {
+            const track = tracks[currentTrackIndex];
+            if (!track) return;
+
+            const sources = getTrackSources(track.fileName);
+            if (activeFallbackIndex < sources.length - 1) {
+                activeFallbackIndex++;
+                console.log(`Tentative avec la source alternative #${activeFallbackIndex + 1}...`);
+                loadAndPlayTrack();
+            } else {
+                isPlaying = false;
+                updatePlayBtn();
+                coverSpinner.classList.add('hidden');
+                coverSpinner.classList.remove('flex');
+                showError(`<strong>Fichier non trouvé sur GitHub :</strong> Assurez-vous que le fichier <code>${track.fileName}</code> existe exactement sous ce nom sur votre dépôt GitHub dans la branche <code>main</code>.`);
+            }
+        }
+
+        audio.onerror = function(e) {
+            console.warn("Erreur détectée sur l'élément audio :", e);
+            handlePlaybackFallback();
         };
 
         function togglePlay() {
             dismissError();
             initAudioContext();
+            
             if (currentTrackIndex === -1 && tracks.length > 0) {
                 currentTrackIndex = 0;
+                activeFallbackIndex = 0;
                 loadAndPlayTrack();
                 return;
             }
+
             if (isPlaying) {
                 pauseAudio();
             } else {
@@ -722,8 +638,10 @@
                     isPlaying = true;
                     updatePlayBtn();
                     renderTracks();
+                    startVisualizerAnimation();
                 }).catch(err => {
-                    showError("Interaction requise : cliquez sur la piste pour valider la lecture.");
+                    console.warn("Erreur au lancement de la lecture :", err);
+                    handlePlaybackFallback();
                 });
             }
         }
@@ -750,18 +668,21 @@
             } else {
                 currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
             }
+            activeFallbackIndex = 0;
             loadAndPlayTrack();
         }
 
         function playPrevious() {
             if (tracks.length === 0) return;
             currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
+            activeFallbackIndex = 0;
             loadAndPlayTrack();
         }
 
         function playAllHardtekk() {
             filterCategory('HARDTEKK');
             currentTrackIndex = 0;
+            activeFallbackIndex = 0;
             loadAndPlayTrack();
         }
 
@@ -841,6 +762,50 @@
             });
         }
 
+        function startVisualizerAnimation() {
+            const canvas = document.getElementById('visualizer');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            function draw() {
+                if (!isPlaying) return;
+                requestAnimationFrame(draw);
+
+                canvas.width = canvas.clientWidth;
+                canvas.height = canvas.clientHeight;
+
+                if (analyser && dataArray) {
+                    analyser.getByteFrequencyData(dataArray);
+
+                    // Calculate EQ levels for meters
+                    let bassAvg = 0, midAvg = 0, trebleAvg = 0;
+                    for (let i = 0; i < 4; i++) bassAvg += dataArray[i];
+                    for (let i = 4; i < 16; i++) midAvg += dataArray[i];
+                    for (let i = 16; i < 32; i++) trebleAvg += dataArray[i];
+
+                    document.getElementById('meter-bass').style.width = Math.min(100, (bassAvg / 4 / 255) * 100) + '%';
+                    document.getElementById('meter-mid').style.width = Math.min(100, (midAvg / 12 / 255) * 100) + '%';
+                    document.getElementById('meter-treble').style.width = Math.min(100, (trebleAvg / 16 / 255) * 100) + '%';
+
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    const barWidth = (canvas.width / dataArray.length) * 1.5;
+                    let x = 0;
+
+                    for (let i = 0; i < dataArray.length; i++) {
+                        const barHeight = (dataArray[i] / 255) * canvas.height;
+                        const gradient = ctx.createLinearGradient(0, canvas.height, 0, 0);
+                        gradient.addColorStop(0, '#00f2fe');
+                        gradient.addColorStop(1, '#ff0080');
+
+                        ctx.fillStyle = gradient;
+                        ctx.fillRect(x, canvas.height - barHeight, barWidth - 1, barHeight);
+                        x += barWidth + 1;
+                    }
+                }
+            }
+            draw();
+        }
+
         function searchTracks() {
             const query = document.getElementById('search-input').value.toLowerCase();
             const grid = document.getElementById('track-grid');
@@ -914,9 +879,47 @@
             document.getElementById('mute-btn').innerHTML = audio.muted ? '<i class="fa-solid fa-volume-xmark"></i>' : '<i class="fa-solid fa-volume-high"></i>';
         }
 
+        function toggleEqPanel() {
+            const panel = document.getElementById('eq-panel');
+            if (panel) panel.classList.toggle('hidden');
+        }
+
+        function updateBass(val) {
+            if (bassFilter) bassFilter.gain.value = val;
+            const el = document.getElementById('bass-val');
+            if (el) el.innerText = (val > 0 ? '+' : '') + val + ' dB';
+        }
+
+        function updateMid(val) {
+            if (midFilter) midFilter.gain.value = val;
+            const el = document.getElementById('mid-val');
+            if (el) el.innerText = (val > 0 ? '+' : '') + val + ' dB';
+        }
+
+        function updateTreble(val) {
+            if (trebleFilter) trebleFilter.gain.value = val;
+            const el = document.getElementById('treble-val');
+            if (el) el.innerText = (val > 0 ? '+' : '') + val + ' dB';
+        }
+
+        function setEqPreset(preset) {
+            const presets = {
+                flat: [0, 0, 0],
+                tekk: [10, 2, 6],
+                club: [6, 0, 4],
+                clarity: [-2, 4, 6]
+            };
+            const vals = presets[preset] || presets.flat;
+            document.getElementById('bass-slider').value = vals[0];
+            document.getElementById('mid-slider').value = vals[1];
+            document.getElementById('treble-slider').value = vals[2];
+            updateBass(vals[0]);
+            updateMid(vals[1]);
+            updateTreble(vals[2]);
+        }
+
         // Initial render on page load
         renderTracks();
     </script>
 </body>
 </html>
-```
