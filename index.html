@@ -151,7 +151,7 @@
                     <div class="space-y-1" id="sidebar-categories">
                         <button onclick="filterCategory('HARDTEKK')" class="category-btn active w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium transition-all bg-gradient-to-r from-brand-purple/40 to-brand-cyan/20 text-white border border-brand-cyan/30">
                             <span class="flex items-center gap-2"><i class="fa-solid fa-bolt text-brand-cyan"></i> HARDTEKK</span>
-                            <span class="text-xs bg-brand-cyan/20 text-brand-cyan px-2 py-0.5 rounded-full font-bold">5</span>
+                            <span class="text-xs bg-brand-cyan/20 text-brand-cyan px-2 py-0.5 rounded-full font-bold">6</span>
                         </button>
                         <button onclick="filterCategory('TECHNO')" class="category-btn w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all">
                             <span class="flex items-center gap-2"><i class="fa-solid fa-wave-square"></i> TECHNO</span>
@@ -208,7 +208,7 @@
                         Écoutez vos morceaux Hardtekk hébergés directement depuis votre dépôt GitHub avec égaliseur sonore et spectromètre en temps réel.
                     </p>
                     <button onclick="playAllHardtekk()" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-brand-cyan to-blue-600 text-slate-950 font-bold hover:brightness-110 transition-all shadow-lg shadow-brand-cyan/25 flex items-center gap-2">
-                        <i class="fa-solid fa-play"></i> Lancer la Playlist (5 Titres)
+                        <i class="fa-solid fa-play"></i> Lancer la Playlist (6 Titres)
                     </button>
                 </div>
             </section>
@@ -219,7 +219,7 @@
                     Tous
                 </button>
                 <button onclick="filterCategory('HARDTEKK')" class="pill-btn active px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-brand-cyan text-slate-950 font-bold shadow-md shadow-brand-cyan/20 transition-all">
-                    ⚡ HARDTEKK (5)
+                    ⚡ HARDTEKK (6)
                 </button>
                 <button onclick="filterCategory('TECHNO')" class="pill-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-white/5 border border-white/10 text-slate-300 hover:text-white transition-all">
                     🎹 TECHNO
@@ -237,7 +237,7 @@
                 <h3 class="text-xl font-bold text-white flex items-center gap-2" id="section-title">
                     <i class="fa-solid fa-compact-disc text-brand-cyan"></i> Pistes HARDTEKK
                 </h3>
-                <span id="track-count" class="text-xs text-slate-400 font-medium">5 titres disponibles</span>
+                <span id="track-count" class="text-xs text-slate-400 font-medium">6 titres disponibles</span>
             </div>
 
             <!-- Track Grid -->
@@ -449,6 +449,15 @@
                 cover: "https://cdn.jsdelivr.net/gh/christophePicard-code/musique-site@main/thumb_UNDRESS%20REHEARSAL.png",
                 fallbackCover: fallbackCovers[4],
                 fileName: "UNDRESS REHEARSAL(HARDTEKK).mp3"
+            },
+            {
+                id: 6,
+                title: "ON THE FLOOR (HARDTEKK)",
+                artist: "Hardtekk Remix",
+                category: "HARDTEKK",
+                cover: "https://cdn.jsdelivr.net/gh/christophePicard-code/musique-site@main/thumb_ON%20THE%20FLOOR.png",
+                fallbackCover: fallbackCovers[0],
+                fileName: "ON THE FLOOR(HARDTEKK).mp3"
             }
         ];
 
