@@ -126,11 +126,11 @@
                 <div>
                     <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 px-3">Menu</p>
                     <div class="space-y-1">
-                        <a href="#" onclick="filterCategory('ALL')" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-brand-cyan/10 text-brand-cyan font-medium transition-all">
+                        <a href="#" onclick="filterCategory('ALL', this)" class="menu-link active flex items-center gap-3 px-3 py-2.5 rounded-xl bg-brand-cyan/10 text-brand-cyan font-medium transition-all">
                             <i class="fa-solid fa-house w-5"></i> Découvrir
                         </a>
-                        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 font-medium transition-all">
-                            <i class="fa-solid fa-fire w-5"></i> Tendances
+                        <a href="#" onclick="filterCategory('FAVORITES', this)" class="menu-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-brand-pink hover:bg-brand-pink/10 font-medium transition-all">
+                            <i class="fa-solid fa-heart w-5"></i> Mes Favoris
                         </a>
                     </div>
                 </div>
@@ -138,15 +138,15 @@
                 <div>
                     <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 px-3">Genres</p>
                     <div class="space-y-1" id="sidebar-categories">
-                        <button onclick="filterCategory('HARDTEKK')" class="category-btn w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all">
-                            <span class="flex items-center gap-2"><i class="fa-solid fa-bolt text-brand-cyan"></i> HARDTEKK</span>
-                            <span class="text-xs bg-brand-cyan/20 text-brand-cyan px-2 py-0.5 rounded-full font-bold">6</span>
+                        <button onclick="filterCategory('HARDTEKK', this)" class="menu-link w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-brand-cyan hover:bg-brand-cyan/10 transition-all">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-bolt"></i> HARDTEKK</span>
+                            <span class="text-xs bg-white/5 px-2 py-0.5 rounded-full">6</span>
                         </button>
-                        <button onclick="filterCategory('ELECTRO')" class="category-btn w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+                        <button onclick="filterCategory('ELECTRO', this)" class="menu-link w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-brand-cyan hover:bg-brand-cyan/10 transition-all">
                             <span class="flex items-center gap-2"><i class="fa-solid fa-sliders"></i> ELECTRO</span>
                             <span class="text-xs bg-white/5 px-2 py-0.5 rounded-full">4</span>
                         </button>
-                        <button onclick="filterCategory('DEEP HOUSE')" class="category-btn w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+                        <button onclick="filterCategory('DEEP HOUSE', this)" class="menu-link w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-brand-cyan hover:bg-brand-cyan/10 transition-all">
                             <span class="flex items-center gap-2"><i class="fa-solid fa-cloud-moon"></i> DEEP HOUSE</span>
                             <span class="text-xs bg-white/5 px-2 py-0.5 rounded-full">1</span>
                         </button>
@@ -162,11 +162,6 @@
                     <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                     <input type="text" id="search-input" onkeyup="searchTracks()" placeholder="Rechercher un titre, artiste..." class="w-full bg-slate-900/60 border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-brand-cyan/50 focus:ring-2 focus:ring-brand-cyan/20 transition-all text-white placeholder-slate-500 backdrop-blur-md">
                 </div>
-                <div class="flex items-center gap-3">
-                    <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full glass-panel border-white/10 text-xs font-semibold text-brand-cyan">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> GitHub Pages
-                    </div>
-                </div>
             </header>
 
             <!-- Status Banner for Audio Errors -->
@@ -178,19 +173,19 @@
                 <button onclick="dismissError()" class="px-2 py-1 rounded-lg bg-rose-500/30 hover:bg-rose-500/50 text-white font-bold text-xs">Fermer</button>
             </div>
 
-            <!-- Category Pills -->
+            <!-- Category Pills (mobile & desktop) -->
             <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-6 custom-scrollbar">
-                <button onclick="filterCategory('ALL')" class="pill-btn active px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-brand-cyan text-slate-950 font-bold shadow-md shadow-brand-cyan/20 transition-all">
+                <button onclick="filterCategory('ALL', this)" class="pill-btn active px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-brand-cyan text-slate-950 font-bold shadow-md shadow-brand-cyan/20 transition-all">
                     Tous (11)
                 </button>
-                <button onclick="filterCategory('HARDTEKK')" class="pill-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-white/5 border border-white/10 text-slate-300 hover:text-white transition-all">
+                <button onclick="filterCategory('FAVORITES', this)" class="pill-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-white/5 border border-white/10 text-slate-300 hover:text-brand-pink hover:border-brand-pink/30 transition-all">
+                    💖 Mes Favoris
+                </button>
+                <button onclick="filterCategory('HARDTEKK', this)" class="pill-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-white/5 border border-white/10 text-slate-300 hover:text-white transition-all">
                     ⚡ HARDTEKK (6)
                 </button>
-                <button onclick="filterCategory('ELECTRO')" class="pill-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-white/5 border border-white/10 text-slate-300 hover:text-white transition-all">
+                <button onclick="filterCategory('ELECTRO', this)" class="pill-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-white/5 border border-white/10 text-slate-300 hover:text-white transition-all">
                     🎛️ ELECTRO (4)
-                </button>
-                <button onclick="filterCategory('DEEP HOUSE')" class="pill-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-white/5 border border-white/10 text-slate-300 hover:text-white transition-all">
-                    🌙 DEEP HOUSE (1)
                 </button>
             </div>
 
@@ -227,27 +222,6 @@
             </div>
 
             <div class="flex flex-col items-center gap-2 w-full md:w-2/4">
-                <div class="w-full flex items-center justify-between text-[10px] font-bold text-slate-400 px-1 gap-2">
-                    <div class="flex items-center gap-1.5 flex-1">
-                        <span class="text-brand-pink flex items-center gap-1"><i class="fa-solid fa-drum text-[9px]"></i> BASSES</span>
-                        <div class="flex-1 bg-slate-900/80 rounded-full h-1.5 overflow-hidden border border-white/10">
-                            <div id="meter-bass" class="bg-gradient-to-r from-brand-pink to-purple-600 h-full w-0 transition-all duration-75"></div>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-1.5 flex-1">
-                        <span class="text-brand-cyan flex items-center gap-1"><i class="fa-solid fa-wave-square text-[9px]"></i> MÉDIUMS</span>
-                        <div class="flex-1 bg-slate-900/80 rounded-full h-1.5 overflow-hidden border border-white/10">
-                            <div id="meter-mid" class="bg-gradient-to-r from-brand-cyan to-blue-500 h-full w-0 transition-all duration-75"></div>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-1.5 flex-1">
-                        <span class="text-amber-400 flex items-center gap-1"><i class="fa-solid fa-bolt text-[9px]"></i> AIGUS</span>
-                        <div class="flex-1 bg-slate-900/80 rounded-full h-1.5 overflow-hidden border border-white/10">
-                            <div id="meter-treble" class="bg-gradient-to-r from-amber-400 to-yellow-300 h-full w-0 transition-all duration-75"></div>
-                        </div>
-                    </div>
-                </div>
-
                 <canvas id="visualizer" class="w-full h-10 rounded-lg bg-slate-950/60 border border-white/10 mb-1"></canvas>
 
                 <div class="flex items-center gap-5">
@@ -276,10 +250,6 @@
             </div>
 
             <div class="hidden md:flex items-center justify-end gap-3 w-1/4">
-                <button onclick="toggleEqPanel()" id="eq-btn" title="Égaliseur audio" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-brand-cyan/20 text-slate-300 hover:text-brand-cyan transition-all text-xs font-semibold flex items-center gap-1.5 border border-white/10">
-                    <i class="fa-solid fa-sliders text-brand-cyan"></i>
-                    <span>Égaliseur</span>
-                </button>
                 <button onclick="toggleMute()" id="mute-btn" class="text-slate-400 hover:text-white transition-colors">
                     <i class="fa-solid fa-volume-high"></i>
                 </button>
@@ -288,59 +258,6 @@
         </div>
     </footer>
 
-    <!-- EQ Panel -->
-    <div id="eq-panel" class="hidden fixed bottom-24 right-4 md:right-8 w-80 glass-panel rounded-2xl p-5 border border-white/15 shadow-2xl z-50 backdrop-blur-xl transition-all">
-        <div class="flex items-center justify-between mb-4 border-b border-white/10 pb-3">
-            <h3 class="font-bold text-sm text-white flex items-center gap-2">
-                <i class="fa-solid fa-sliders text-brand-cyan"></i> Égaliseur Studio
-            </h3>
-            <button onclick="toggleEqPanel()" class="text-slate-400 hover:text-white text-xs p-1">
-                <i class="fa-solid fa-xmark text-sm"></i>
-            </button>
-        </div>
-
-        <div class="mb-4">
-            <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-2">Préréglages</span>
-            <div class="grid grid-cols-4 gap-1.5">
-                <button onclick="setEqPreset('flat')" class="px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-[11px] font-semibold text-slate-300 transition-all border border-white/5 text-center">Plat</button>
-                <button onclick="setEqPreset('tekk')" class="px-2 py-1 rounded-lg bg-brand-pink/20 border border-brand-pink/40 hover:bg-brand-pink/30 text-[11px] font-bold text-brand-pink transition-all text-center">Tekk</button>
-                <button onclick="setEqPreset('club')" class="px-2 py-1 rounded-lg bg-brand-cyan/20 border border-brand-cyan/40 hover:bg-brand-cyan/30 text-[11px] font-bold text-brand-cyan transition-all text-center">Club</button>
-                <button onclick="setEqPreset('clarity')" class="px-2 py-1 rounded-lg bg-amber-400/20 border border-amber-400/40 hover:bg-amber-400/30 text-[11px] font-bold text-amber-300 transition-all text-center">Voix</button>
-            </div>
-        </div>
-
-        <div class="space-y-4">
-            <div>
-                <div class="flex justify-between items-center text-xs mb-1">
-                    <span class="font-semibold text-brand-pink flex items-center gap-1">
-                        <i class="fa-solid fa-drum text-[10px]"></i> BASSES
-                    </span>
-                    <span id="bass-val" class="font-mono text-[11px] text-slate-300">0 dB</span>
-                </div>
-                <input type="range" id="bass-slider" min="-12" max="12" step="1" value="0" oninput="updateBass(this.value)" class="w-full">
-            </div>
-            <div>
-                <div class="flex justify-between items-center text-xs mb-1">
-                    <span class="font-semibold text-brand-cyan flex items-center gap-1">
-                        <i class="fa-solid fa-wave-square text-[10px]"></i> MÉDIUMS
-                    </span>
-                    <span id="mid-val" class="font-mono text-[11px] text-slate-300">0 dB</span>
-                </div>
-                <input type="range" id="mid-slider" min="-12" max="12" step="1" value="0" oninput="updateMid(this.value)" class="w-full">
-            </div>
-            <div>
-                <div class="flex justify-between items-center text-xs mb-1">
-                    <span class="font-semibold text-amber-400 flex items-center gap-1">
-                        <i class="fa-solid fa-bolt text-[10px]"></i> AIGUS
-                    </span>
-                    <span id="treble-val" class="font-mono text-[11px] text-slate-300">0 dB</span>
-                </div>
-                <input type="range" id="treble-slider" min="-12" max="12" step="1" value="0" oninput="updateTreble(this.value)" class="w-full">
-            </div>
-        </div>
-    </div>
-
-    <!-- CORRECTION ICI: Ajout de l'attribut crossorigin="anonymous" -->
     <audio id="audio-element" crossorigin="anonymous" preload="auto"></audio>
 
     <script>
@@ -352,7 +269,6 @@
             "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=500&q=80"
         ];
 
-        // CORRECTION ICI: Utilisation de chemins relatifs "./" pour tout
         const tracks = [
             { id: 1, title: "Breaking Me", artist: "Topic, A7S", category: "ELECTRO", cover: "./thumb_Breaking Me.png", fallbackCover: fallbackCovers[0], fileName: "Breaking Me.mp3" },
             { id: 2, title: "CARAMEL JESTER - UMBRELLA", artist: "Caramel Jester", category: "HARDTEKK", cover: "./thumb_CARAMEL JESTER - UMBRELLA.png", fallbackCover: fallbackCovers[1], fileName: "CARAMEL JESTER - UMBRELLA(HARDTEKK).mp3" },
@@ -366,6 +282,28 @@
             { id: 10, title: "SOMETIMES (HARDTEKK)", artist: "Hardtekk Producer", category: "HARDTEKK", cover: "./thumb_SOMETIMES.png", fallbackCover: fallbackCovers[4], fileName: "SOMETIMES(HARDTEKK).mp3" },
             { id: 11, title: "UNDRESS REHEARSAL (HARDTEKK)", artist: "Hardtekk Producer", category: "HARDTEKK", cover: "./thumb_UNDRESS REHEARSAL.png", fallbackCover: fallbackCovers[0], fileName: "UNDRESS REHEARSAL(HARDTEKK).mp3" }
         ];
+
+        // --- GESTION DES FAVORIS ---
+        // On récupère les favoris enregistrés, ou on crée un tableau vide
+        let favoriteIds = JSON.parse(localStorage.getItem('harmonie_favorites')) || [];
+
+        function toggleFavorite(event, trackId) {
+            event.stopPropagation(); // Empêche de lancer la musique quand on clique sur le cœur
+            
+            if (favoriteIds.includes(trackId)) {
+                // Retirer des favoris
+                favoriteIds = favoriteIds.filter(id => id !== trackId);
+            } else {
+                // Ajouter aux favoris
+                favoriteIds.push(trackId);
+            }
+            
+            // Sauvegarder dans le navigateur
+            localStorage.setItem('harmonie_favorites', JSON.stringify(favoriteIds));
+            
+            // Recharger l'affichage
+            renderTracks();
+        }
 
         let currentTrackIndex = -1;
         let isPlaying = false;
@@ -387,10 +325,6 @@
         let analyser = null;
         let audioSource = null;
         let dataArray = null;
-        let bassFilter = null;
-        let midFilter = null;
-        let trebleFilter = null;
-        let isAudioContextBound = false;
 
         function handleImageError(img, trackTitle = 'HARMONIE', fallbackUrl = '') {
             img.onerror = null;
@@ -416,56 +350,21 @@
             }
         }
 
-        function showError(msg) {
-            const toast = document.getElementById('error-toast');
-            const toastText = document.getElementById('error-toast-text');
-            if (toast && toastText) {
-                toastText.innerHTML = msg;
-                toast.classList.remove('hidden');
-            }
-        }
-
-        function dismissError() {
-            const toast = document.getElementById('error-toast');
-            if (toast) toast.classList.add('hidden');
-        }
-
         function initAudioContext() {
             if (!audioCtx) {
                 try {
                     const AudioContext = window.AudioContext || window.webkitAudioContext;
                     audioCtx = new AudioContext();
-                    bassFilter = audioCtx.createBiquadFilter();
-                    bassFilter.type = 'lowshelf';
-                    bassFilter.frequency.value = 250;
-                    midFilter = audioCtx.createBiquadFilter();
-                    midFilter.type = 'peaking';
-                    midFilter.frequency.value = 1500;
-                    midFilter.Q.value = 1;
-                    trebleFilter = audioCtx.createBiquadFilter();
-                    trebleFilter.type = 'highshelf';
-                    trebleFilter.frequency.value = 4000;
                     analyser = audioCtx.createAnalyser();
                     analyser.fftSize = 128;
                     dataArray = new Uint8Array(analyser.frequencyBinCount);
+                    
+                    audioSource = audioCtx.createMediaElementSource(audio);
+                    audioSource.connect(analyser);
+                    analyser.connect(audioCtx.destination);
                 } catch (e) {
                     console.warn('Web Audio API not fully supported', e);
                 }
-            }
-        }
-
-        function bindAudioSourceNode() {
-            if (isAudioContextBound || !audioCtx) return;
-            try {
-                audioSource = audioCtx.createMediaElementSource(audio);
-                audioSource.connect(bassFilter);
-                bassFilter.connect(midFilter);
-                midFilter.connect(trebleFilter);
-                trebleFilter.connect(analyser);
-                analyser.connect(audioCtx.destination);
-                isAudioContextBound = true;
-            } catch (e) {
-                console.warn('Audio source connection note:', e);
             }
         }
 
@@ -482,29 +381,24 @@
             const existingFallback = playerCover.parentElement.querySelector('.gradient-cover-fallback');
             if (existingFallback) existingFallback.remove();
 
-            // CORRECTION ICI: Attribution de la source audio en utilisant un lien relatif (fonctionne sur GitHub Pages)
             audio.src = track.fileName; 
             audio.load();
 
             coverSpinner.classList.remove('hidden');
             coverSpinner.classList.add('flex');
-            dismissError();
 
             if (autoplay) {
                 initAudioContext();
-                if (audioCtx && audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
+                if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+                
                 audio.play().then(() => {
                     isPlaying = true;
                     updatePlayButtonUI();
                     coverSpinner.classList.add('hidden');
                     coverSpinner.classList.remove('flex');
-                    if (!isAudioContextBound) bindAudioSourceNode();
                 }).catch(err => {
                     coverSpinner.classList.add('hidden');
                     coverSpinner.classList.remove('flex');
-                    showError(`Impossible de lire <b>${track.title}</b>. L'interaction de l'utilisateur est peut-être requise.`);
                     isPlaying = false;
                     updatePlayButtonUI();
                 });
@@ -518,9 +412,7 @@
                 return;
             }
             initAudioContext();
-            if (audioCtx && audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
 
             if (isPlaying) {
                 audio.pause();
@@ -528,21 +420,13 @@
             } else {
                 audio.play().then(() => {
                     isPlaying = true;
-                    if (!isAudioContextBound) bindAudioSourceNode();
-                }).catch(err => {
-                    showError("Erreur de lecture.");
-                    isPlaying = false;
                 });
             }
             updatePlayButtonUI();
         }
 
         function updatePlayButtonUI() {
-            if (isPlaying) {
-                playBtn.innerHTML = '<i class="fa-solid fa-pause text-lg"></i>';
-            } else {
-                playBtn.innerHTML = '<i class="fa-solid fa-play text-lg pl-0.5"></i>';
-            }
+            playBtn.innerHTML = isPlaying ? '<i class="fa-solid fa-pause text-lg"></i>' : '<i class="fa-solid fa-play text-lg pl-0.5"></i>';
         }
 
         function playNext() {
@@ -574,53 +458,31 @@
 
         function toggleShuffle() {
             isShuffle = !isShuffle;
-            const btn = document.getElementById('shuffle-btn');
-            btn.className = isShuffle ? 'text-brand-cyan transition-colors text-sm' : 'text-slate-400 hover:text-white transition-colors text-sm';
+            document.getElementById('shuffle-btn').className = isShuffle ? 'text-brand-cyan transition-colors text-sm' : 'text-slate-400 hover:text-white transition-colors text-sm';
         }
 
         function toggleRepeat() {
             isRepeat = !isRepeat;
-            const btn = document.getElementById('repeat-btn');
-            btn.className = isRepeat ? 'text-brand-cyan transition-colors text-sm' : 'text-slate-400 hover:text-white transition-colors text-sm';
+            document.getElementById('repeat-btn').className = isRepeat ? 'text-brand-cyan transition-colors text-sm' : 'text-slate-400 hover:text-white transition-colors text-sm';
         }
 
-        function toggleEqPanel() {
-            document.getElementById('eq-panel').classList.toggle('hidden');
-        }
-
-        function updateBass(val) {
-            document.getElementById('bass-val').textContent = val + ' dB';
-            if (bassFilter) bassFilter.gain.value = parseFloat(val);
-        }
-        function updateMid(val) {
-            document.getElementById('mid-val').textContent = val + ' dB';
-            if (midFilter) midFilter.gain.value = parseFloat(val);
-        }
-        function updateTreble(val) {
-            document.getElementById('treble-val').textContent = val + ' dB';
-            if (trebleFilter) trebleFilter.gain.value = parseFloat(val);
-        }
-
-        function setEqPreset(preset) {
-            const bass = document.getElementById('bass-slider');
-            const mid = document.getElementById('mid-slider');
-            const treble = document.getElementById('treble-slider');
-            if (preset === 'flat') { bass.value = 0; mid.value = 0; treble.value = 0; }
-            else if (preset === 'tekk') { bass.value = 9; mid.value = 2; treble.value = 6; }
-            else if (preset === 'club') { bass.value = 7; mid.value = -1; treble.value = 4; }
-            else if (preset === 'clarity') { bass.value = -2; mid.value = 5; treble.value = 3; }
-            updateBass(bass.value); updateMid(mid.value); updateTreble(treble.value);
-        }
-
-        function filterCategory(cat) {
+        function filterCategory(cat, btnElement) {
             currentFilter = cat;
+
+            // Mise à jour visuelle des boutons "Pill"
             document.querySelectorAll('.pill-btn').forEach(btn => {
                 btn.classList.remove('active', 'bg-brand-cyan', 'text-slate-950', 'font-bold', 'shadow-md', 'shadow-brand-cyan/20');
                 btn.classList.add('bg-white/5', 'border', 'border-white/10', 'text-slate-300');
             });
-            event.currentTarget.classList.add('active', 'bg-brand-cyan', 'text-slate-950', 'font-bold', 'shadow-md', 'shadow-brand-cyan/20');
-            event.currentTarget.classList.remove('bg-white/5', 'border', 'border-white/10', 'text-slate-300');
-            document.getElementById('section-title').innerHTML = `<i class="fa-solid fa-compact-disc text-brand-cyan"></i> Pistes ${cat === 'ALL' ? 'Générales' : cat}`;
+            
+            // Mise à jour du titre de la section
+            let titleHtml = '';
+            if(cat === 'FAVORITES') titleHtml = '<i class="fa-solid fa-heart text-brand-pink"></i> Mes Favoris';
+            else if(cat === 'ALL') titleHtml = '<i class="fa-solid fa-compact-disc text-brand-cyan"></i> Pistes Générales';
+            else titleHtml = `<i class="fa-solid fa-music text-brand-cyan"></i> Pistes ${cat}`;
+            
+            document.getElementById('section-title').innerHTML = titleHtml;
+
             renderTracks();
         }
 
@@ -631,25 +493,42 @@
             const searchVal = document.getElementById('search-input').value.toLowerCase();
             
             const filtered = tracks.filter(t => {
-                return (currentFilter === 'ALL' || t.category === currentFilter) && 
-                       (t.title.toLowerCase().includes(searchVal) || t.artist.toLowerCase().includes(searchVal));
+                // Logique de filtrage (Catégorie + Favoris + Recherche)
+                let categoryMatch = false;
+                if (currentFilter === 'ALL') categoryMatch = true;
+                else if (currentFilter === 'FAVORITES') categoryMatch = favoriteIds.includes(t.id);
+                else categoryMatch = (t.category === currentFilter);
+
+                let searchMatch = t.title.toLowerCase().includes(searchVal) || t.artist.toLowerCase().includes(searchVal);
+                
+                return categoryMatch && searchMatch;
             });
 
-            document.getElementById('track-count').textContent = `${filtered.length} titre${filtered.length > 1 ? 's' : ''} disponible${filtered.length > 1 ? 's' : ''}`;
+            document.getElementById('track-count').textContent = `${filtered.length} titre${filtered.length > 1 ? 's' : ''}`;
 
             if (filtered.length === 0) {
                 grid.innerHTML = `
                     <div class="col-span-full py-16 text-center glass-card rounded-2xl">
-                        <i class="fa-solid fa-music text-3xl text-slate-500 mb-3"></i>
-                        <p class="text-slate-300 font-semibold text-sm">Aucune piste trouvée</p>
+                        <i class="fa-${currentFilter === 'FAVORITES' ? 'regular fa-heart' : 'solid fa-music'} text-3xl text-slate-500 mb-3"></i>
+                        <p class="text-slate-300 font-semibold text-sm">
+                            ${currentFilter === 'FAVORITES' ? "Vous n'avez pas encore de favoris." : "Aucune piste trouvée"}
+                        </p>
                     </div>`;
                 return;
             }
 
             grid.innerHTML = filtered.map(track => {
                 const isCurrent = currentTrackIndex === track.id - 1;
+                const isFav = favoriteIds.includes(track.id); // Vérifie si la musique est dans les favoris
+
                 return `
                     <div onclick="loadTrack(${track.id - 1}, true)" class="glass-card rounded-2xl p-4 cursor-pointer group relative overflow-hidden flex flex-col justify-between ${isCurrent ? 'border-brand-cyan/60 bg-white/10 shadow-lg shadow-brand-cyan/10' : ''}">
+                        
+                        <!-- Bouton Favoris -->
+                        <button onclick="toggleFavorite(event, ${track.id})" class="absolute top-6 left-6 z-10 w-8 h-8 rounded-full bg-slate-900/70 backdrop-blur-md flex items-center justify-center hover:scale-110 transition-all ${isFav ? 'text-brand-pink shadow-[0_0_10px_rgba(255,0,128,0.3)]' : 'text-slate-400 hover:text-brand-pink'}">
+                            <i class="fa-${isFav ? 'solid' : 'regular'} fa-heart"></i>
+                        </button>
+
                         <div class="relative w-full aspect-square rounded-xl overflow-hidden bg-slate-900 mb-3">
                             <img src="${track.cover}" alt="${track.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="handleImageError(this, '${track.title.replace(/'/g, "\\'")}', '${track.fallbackCover}')">
                             <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -658,7 +537,7 @@
                                 </div>
                             </div>
                             ${isCurrent ? `
-                                <div class="absolute top-2 right-2 px-2 py-1 rounded-lg bg-brand-cyan/90 text-slate-950 text-[10px] font-extrabold uppercase tracking-wider flex items-center gap-1 shadow-md">
+                                <div class="absolute bottom-2 right-2 px-2 py-1 rounded-lg bg-brand-cyan/90 text-slate-950 text-[10px] font-extrabold uppercase tracking-wider flex items-center gap-1 shadow-md">
                                     <span class="w-1.5 h-1.5 rounded-full bg-slate-950 animate-ping"></span> En cours
                                 </div>
                             ` : ''}
@@ -688,15 +567,6 @@
             isRepeat ? (audio.currentTime = 0, audio.play()) : playNext();
         });
 
-        audio.addEventListener('error', (e) => {
-            console.warn("Erreur audio:", e);
-            coverSpinner.classList.add('hidden');
-            coverSpinner.classList.remove('flex');
-            showError("Erreur de chargement. Vérifiez que les fichiers sont sur GitHub Pages avec le même nom exact.");
-            isPlaying = false;
-            updatePlayButtonUI();
-        });
-
         const canvas = document.getElementById('visualizer');
         const canvasCtx = canvas.getContext('2d');
 
@@ -715,19 +585,6 @@
             }
 
             analyser.getByteFrequencyData(dataArray);
-            let bassSum = 0, midSum = 0, trebleSum = 0;
-            const third = Math.floor(dataArray.length / 3);
-            for(let i=0; i<third; i++) bassSum += dataArray[i];
-            for(let i=third; i<third*2; i++) midSum += dataArray[i];
-            for(let i=third*2; i<dataArray.length; i++) trebleSum += dataArray[i];
-
-            let bassAvg = (bassSum / third) / 255 * 100;
-            let midAvg = (midSum / third) / 255 * 100;
-            let trebleAvg = (trebleSum / (dataArray.length - third*2)) / 255 * 100;
-
-            document.getElementById('meter-bass').style.width = Math.min(100, bassAvg * 1.3) + '%';
-            document.getElementById('meter-mid').style.width = Math.min(100, midAvg * 1.3) + '%';
-            document.getElementById('meter-treble').style.width = Math.min(100, trebleAvg * 1.3) + '%';
 
             const barWidth = (width / dataArray.length) * 2.5;
             let x = 0;
