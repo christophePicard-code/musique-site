@@ -101,14 +101,6 @@
             background: rgba(255, 255, 255, 0.2);
             border-radius: 2px;
         }
-
-        @keyframes pulseGlow {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 0.8; }
-        }
-        .neon-glow {
-            animation: pulseGlow 3s infinite;
-        }
     </style>
 </head>
 <body class="font-sans antialiased min-h-screen flex flex-col justify-between overflow-x-hidden text-slate-100">
@@ -158,10 +150,6 @@
                             <span class="flex items-center gap-2"><i class="fa-solid fa-cloud-moon"></i> DEEP HOUSE</span>
                             <span class="text-xs bg-white/5 px-2 py-0.5 rounded-full">1</span>
                         </button>
-                        <button onclick="filterCategory('TECHNO')" class="category-btn w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all">
-                            <span class="flex items-center gap-2"><i class="fa-solid fa-wave-square"></i> TECHNO</span>
-                            <span class="text-xs bg-white/5 px-2 py-0.5 rounded-full">0</span>
-                        </button>
                     </div>
                 </div>
             </nav>
@@ -176,7 +164,7 @@
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full glass-panel border-white/10 text-xs font-semibold text-brand-cyan">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> GitHub Live Stream
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> GitHub Pages
                     </div>
                 </div>
             </header>
@@ -185,7 +173,7 @@
             <div id="error-toast" class="hidden mb-6 p-4 rounded-2xl bg-rose-500/20 border border-rose-500/40 text-rose-200 text-xs md:text-sm flex items-center justify-between gap-3 shadow-lg">
                 <div class="flex items-center gap-3">
                     <i class="fa-solid fa-triangle-exclamation text-rose-400 text-lg"></i>
-                    <span id="error-toast-text">Erreur de lecture audio. Veuillez vérifier votre connexion ou cliquer à nouveau sur lecture.</span>
+                    <span id="error-toast-text">Erreur de lecture audio.</span>
                 </div>
                 <button onclick="dismissError()" class="px-2 py-1 rounded-lg bg-rose-500/30 hover:bg-rose-500/50 text-white font-bold text-xs">Fermer</button>
             </div>
@@ -216,7 +204,7 @@
 
             <!-- Track Grid -->
             <div id="track-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                <!-- Track Cards dynamically populated by JS -->
+                <!-- Les cartes sont générées dynamiquement en Javascript -->
             </div>
         </main>
     </div>
@@ -225,7 +213,6 @@
     <footer class="fixed bottom-0 left-0 right-0 glass-panel border-t border-white/10 px-4 py-3 md:px-8 md:py-4 z-50">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
             
-            <!-- Currently Playing Info -->
             <div class="flex items-center gap-4 w-full md:w-1/4">
                 <div class="relative w-12 h-12 md:w-14 md:h-14 rounded-xl overflow-hidden bg-slate-800 border border-white/10 flex-shrink-0 group">
                     <img id="player-cover" src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&q=80" alt="Cover" class="w-full h-full object-cover" onerror="handleImageError(this, 'HARMONIE')">
@@ -239,7 +226,6 @@
                 </div>
             </div>
 
-            <!-- Central Player Controls & Visualizer -->
             <div class="flex flex-col items-center gap-2 w-full md:w-2/4">
                 <div class="w-full flex items-center justify-between text-[10px] font-bold text-slate-400 px-1 gap-2">
                     <div class="flex items-center gap-1.5 flex-1">
@@ -289,7 +275,6 @@
                 </div>
             </div>
 
-            <!-- Volume Control & EQ Toggle -->
             <div class="hidden md:flex items-center justify-end gap-3 w-1/4">
                 <button onclick="toggleEqPanel()" id="eq-btn" title="Égaliseur audio" class="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-brand-cyan/20 text-slate-300 hover:text-brand-cyan transition-all text-xs font-semibold flex items-center gap-1.5 border border-white/10">
                     <i class="fa-solid fa-sliders text-brand-cyan"></i>
@@ -307,7 +292,7 @@
     <div id="eq-panel" class="hidden fixed bottom-24 right-4 md:right-8 w-80 glass-panel rounded-2xl p-5 border border-white/15 shadow-2xl z-50 backdrop-blur-xl transition-all">
         <div class="flex items-center justify-between mb-4 border-b border-white/10 pb-3">
             <h3 class="font-bold text-sm text-white flex items-center gap-2">
-                <i class="fa-solid fa-sliders text-brand-cyan"></i> Égaliseur Studio (EQ)
+                <i class="fa-solid fa-sliders text-brand-cyan"></i> Égaliseur Studio
             </h3>
             <button onclick="toggleEqPanel()" class="text-slate-400 hover:text-white text-xs p-1">
                 <i class="fa-solid fa-xmark text-sm"></i>
@@ -315,10 +300,10 @@
         </div>
 
         <div class="mb-4">
-            <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-2">Préréglages rapides</span>
+            <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-2">Préréglages</span>
             <div class="grid grid-cols-4 gap-1.5">
                 <button onclick="setEqPreset('flat')" class="px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-[11px] font-semibold text-slate-300 transition-all border border-white/5 text-center">Plat</button>
-                <button onclick="setEqPreset('tekk')" class="px-2 py-1 rounded-lg bg-brand-pink/20 border border-brand-pink/40 hover:bg-brand-pink/30 text-[11px] font-bold text-brand-pink transition-all text-center">Tekk Kick</button>
+                <button onclick="setEqPreset('tekk')" class="px-2 py-1 rounded-lg bg-brand-pink/20 border border-brand-pink/40 hover:bg-brand-pink/30 text-[11px] font-bold text-brand-pink transition-all text-center">Tekk</button>
                 <button onclick="setEqPreset('club')" class="px-2 py-1 rounded-lg bg-brand-cyan/20 border border-brand-cyan/40 hover:bg-brand-cyan/30 text-[11px] font-bold text-brand-cyan transition-all text-center">Club</button>
                 <button onclick="setEqPreset('clarity')" class="px-2 py-1 rounded-lg bg-amber-400/20 border border-amber-400/40 hover:bg-amber-400/30 text-[11px] font-bold text-amber-300 transition-all text-center">Voix</button>
             </div>
@@ -328,41 +313,35 @@
             <div>
                 <div class="flex justify-between items-center text-xs mb-1">
                     <span class="font-semibold text-brand-pink flex items-center gap-1">
-                        <i class="fa-solid fa-drum text-[10px]"></i> BASSES (60-250 Hz)
+                        <i class="fa-solid fa-drum text-[10px]"></i> BASSES
                     </span>
                     <span id="bass-val" class="font-mono text-[11px] text-slate-300">0 dB</span>
                 </div>
                 <input type="range" id="bass-slider" min="-12" max="12" step="1" value="0" oninput="updateBass(this.value)" class="w-full">
             </div>
-
             <div>
                 <div class="flex justify-between items-center text-xs mb-1">
                     <span class="font-semibold text-brand-cyan flex items-center gap-1">
-                        <i class="fa-solid fa-wave-square text-[10px]"></i> MÉDIUMS (1.5 kHz)
+                        <i class="fa-solid fa-wave-square text-[10px]"></i> MÉDIUMS
                     </span>
                     <span id="mid-val" class="font-mono text-[11px] text-slate-300">0 dB</span>
                 </div>
                 <input type="range" id="mid-slider" min="-12" max="12" step="1" value="0" oninput="updateMid(this.value)" class="w-full">
             </div>
-
             <div>
                 <div class="flex justify-between items-center text-xs mb-1">
                     <span class="font-semibold text-amber-400 flex items-center gap-1">
-                        <i class="fa-solid fa-bolt text-[10px]"></i> AIGUS (4-12 kHz)
+                        <i class="fa-solid fa-bolt text-[10px]"></i> AIGUS
                     </span>
                     <span id="treble-val" class="font-mono text-[11px] text-slate-300">0 dB</span>
                 </div>
                 <input type="range" id="treble-slider" min="-12" max="12" step="1" value="0" oninput="updateTreble(this.value)" class="w-full">
             </div>
         </div>
-
-        <button onclick="setEqPreset('flat')" class="w-full mt-4 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs text-slate-400 hover:text-white transition-all text-center">
-            Réinitialiser l'égaliseur
-        </button>
     </div>
 
-    <!-- Audio Element -->
-    <audio id="audio-element" preload="auto"></audio>
+    <!-- CORRECTION ICI: Ajout de l'attribut crossorigin="anonymous" -->
+    <audio id="audio-element" crossorigin="anonymous" preload="auto"></audio>
 
     <script>
         const fallbackCovers = [
@@ -373,114 +352,26 @@
             "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=500&q=80"
         ];
 
-        // Tous les 11 fichiers basés sur l'image fournie
+        // CORRECTION ICI: Utilisation de chemins relatifs "./" pour tout
         const tracks = [
-            {
-                id: 1,
-                title: "Breaking Me",
-                artist: "Topic, A7S",
-                category: "ELECTRO",
-                cover: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/thumb_Breaking%20Me.png",
-                fallbackCover: fallbackCovers[0],
-                fileName: "Breaking Me.mp3"
-            },
-            {
-                id: 2,
-                title: "CARAMEL JESTER - UMBRELLA",
-                artist: "Caramel Jester",
-                category: "HARDTEKK",
-                cover: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/thumb_CARAMEL%20JESTER%20-%20UMBRELLA.png",
-                fallbackCover: fallbackCovers[1],
-                fileName: "CARAMEL JESTER - UMBRELLA(HARDTEKK).mp3"
-            },
-            {
-                id: 3,
-                title: "COOL (HARDTEKK)",
-                artist: "Hardtekk Artist",
-                category: "HARDTEKK",
-                cover: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/thumb_COOL.png",
-                fallbackCover: fallbackCovers[2],
-                fileName: "COOL(HARDTEKK).mp3"
-            },
-            {
-                id: 4,
-                title: "Eins Zwei Polizei (HARDTEKK)",
-                artist: "Mo-Do Remix",
-                category: "HARDTEKK",
-                cover: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/thumb_Eins%20Zwei%20Polizei.png",
-                fallbackCover: fallbackCovers[3],
-                fileName: "Eins Zwei Polizei(HARDTEKK).mp3"
-            },
-            {
-                id: 5,
-                title: "In my mind",
-                artist: "Dynoro, Gigi D'Agostino",
-                category: "ELECTRO",
-                cover: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/thumb_in%20my%20mind.png",
-                fallbackCover: fallbackCovers[4],
-                fileName: "In my mind.mp3"
-            },
-            {
-                id: 6,
-                title: "Monster",
-                artist: "LUM!X, Gabry Ponte",
-                category: "ELECTRO",
-                cover: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/thumb_Monster.png",
-                fallbackCover: fallbackCovers[0],
-                fileName: "Monster.mp3"
-            },
-            {
-                id: 7,
-                title: "ON THE FLOOR (HARDTEKK)",
-                artist: "Hardtekk Remix",
-                category: "HARDTEKK",
-                cover: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/thumb_ON%20THE%20FLOOR.png",
-                fallbackCover: fallbackCovers[1],
-                fileName: "ON THE FLOOR(HARDTEKK).mp3"
-            },
-            {
-                id: 8,
-                title: "Piece Of Your Heart",
-                artist: "Meduza",
-                category: "DEEP HOUSE",
-                cover: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/thumb_Piece%20Of%20Your%20Heart.png",
-                fallbackCover: fallbackCovers[2],
-                fileName: "Piece Of Your Heart.mp3"
-            },
-            {
-                id: 9,
-                title: "Roses",
-                artist: "SAINt JHN",
-                category: "ELECTRO",
-                cover: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/thumb_roses.png",
-                fallbackCover: fallbackCovers[3],
-                fileName: "Roses.mp3"
-            },
-            {
-                id: 10,
-                title: "SOMETIMES (HARDTEKK)",
-                artist: "Hardtekk Producer",
-                category: "HARDTEKK",
-                cover: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/thumb_SOMETIMES.png",
-                fallbackCover: fallbackCovers[4],
-                fileName: "SOMETIMES(HARDTEKK).mp3"
-            },
-            {
-                id: 11,
-                title: "UNDRESS REHEARSAL (HARDTEKK)",
-                artist: "Hardtekk Producer",
-                category: "HARDTEKK",
-                cover: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/thumb_UNDRESS%20REHEARSAL.png",
-                fallbackCover: fallbackCovers[0],
-                fileName: "UNDRESS REHEARSAL(HARDTEKK).mp3"
-            }
+            { id: 1, title: "Breaking Me", artist: "Topic, A7S", category: "ELECTRO", cover: "./thumb_Breaking Me.png", fallbackCover: fallbackCovers[0], fileName: "Breaking Me.mp3" },
+            { id: 2, title: "CARAMEL JESTER - UMBRELLA", artist: "Caramel Jester", category: "HARDTEKK", cover: "./thumb_CARAMEL JESTER - UMBRELLA.png", fallbackCover: fallbackCovers[1], fileName: "CARAMEL JESTER - UMBRELLA(HARDTEKK).mp3" },
+            { id: 3, title: "COOL (HARDTEKK)", artist: "Hardtekk Artist", category: "HARDTEKK", cover: "./thumb_COOL.png", fallbackCover: fallbackCovers[2], fileName: "COOL(HARDTEKK).mp3" },
+            { id: 4, title: "Eins Zwei Polizei (HARDTEKK)", artist: "Mo-Do Remix", category: "HARDTEKK", cover: "./thumb_Eins Zwei Polizei.png", fallbackCover: fallbackCovers[3], fileName: "Eins Zwei Polizei(HARDTEKK).mp3" },
+            { id: 5, title: "In my mind", artist: "Dynoro, Gigi D'Agostino", category: "ELECTRO", cover: "./thumb_in my mind.png", fallbackCover: fallbackCovers[4], fileName: "In my mind.mp3" },
+            { id: 6, title: "Monster", artist: "LUM!X, Gabry Ponte", category: "ELECTRO", cover: "./thumb_Monster.png", fallbackCover: fallbackCovers[0], fileName: "Monster.mp3" },
+            { id: 7, title: "ON THE FLOOR (HARDTEKK)", artist: "Hardtekk Remix", category: "HARDTEKK", cover: "./thumb_ON THE FLOOR.png", fallbackCover: fallbackCovers[1], fileName: "ON THE FLOOR(HARDTEKK).mp3" },
+            { id: 8, title: "Piece Of Your Heart", artist: "Meduza", category: "DEEP HOUSE", cover: "./thumb_Piece Of Your Heart.png", fallbackCover: fallbackCovers[2], fileName: "Piece Of Your Heart.mp3" },
+            { id: 9, title: "Roses", artist: "SAINt JHN", category: "ELECTRO", cover: "./thumb_roses.png", fallbackCover: fallbackCovers[3], fileName: "Roses.mp3" },
+            { id: 10, title: "SOMETIMES (HARDTEKK)", artist: "Hardtekk Producer", category: "HARDTEKK", cover: "./thumb_SOMETIMES.png", fallbackCover: fallbackCovers[4], fileName: "SOMETIMES(HARDTEKK).mp3" },
+            { id: 11, title: "UNDRESS REHEARSAL (HARDTEKK)", artist: "Hardtekk Producer", category: "HARDTEKK", cover: "./thumb_UNDRESS REHEARSAL.png", fallbackCover: fallbackCovers[0], fileName: "UNDRESS REHEARSAL(HARDTEKK).mp3" }
         ];
 
         let currentTrackIndex = -1;
         let isPlaying = false;
         let isShuffle = false;
         let isRepeat = false;
-        let currentFilter = 'ALL'; // Modification : Afficher 'Tous' par défaut
+        let currentFilter = 'ALL'; 
 
         const audio = document.getElementById('audio-element');
         const playBtn = document.getElementById('play-btn');
@@ -496,7 +387,6 @@
         let analyser = null;
         let audioSource = null;
         let dataArray = null;
-
         let bassFilter = null;
         let midFilter = null;
         let trebleFilter = null;
@@ -520,7 +410,6 @@
                             <i class="fa-solid fa-compact-disc text-lg animate-spin" style="animation-duration: 10s;"></i>
                         </div>
                         <span class="text-[11px] font-bold text-white leading-tight uppercase truncate max-w-full">${trackTitle}</span>
-                        <span class="text-[9px] text-brand-cyan font-mono mt-0.5">TRACK</span>
                     `;
                     parent.appendChild(fallbackDiv);
                 }
@@ -546,23 +435,18 @@
                 try {
                     const AudioContext = window.AudioContext || window.webkitAudioContext;
                     audioCtx = new AudioContext();
-
                     bassFilter = audioCtx.createBiquadFilter();
                     bassFilter.type = 'lowshelf';
                     bassFilter.frequency.value = 250;
-
                     midFilter = audioCtx.createBiquadFilter();
                     midFilter.type = 'peaking';
                     midFilter.frequency.value = 1500;
                     midFilter.Q.value = 1;
-
                     trebleFilter = audioCtx.createBiquadFilter();
                     trebleFilter.type = 'highshelf';
                     trebleFilter.frequency.value = 4000;
-
                     analyser = audioCtx.createAnalyser();
                     analyser.fftSize = 128;
-
                     dataArray = new Uint8Array(analyser.frequencyBinCount);
                 } catch (e) {
                     console.warn('Web Audio API not fully supported', e);
@@ -581,7 +465,7 @@
                 analyser.connect(audioCtx.destination);
                 isAudioContextBound = true;
             } catch (e) {
-                console.warn('Audio source node connection note:', e);
+                console.warn('Audio source connection note:', e);
             }
         }
 
@@ -598,13 +482,13 @@
             const existingFallback = playerCover.parentElement.querySelector('.gradient-cover-fallback');
             if (existingFallback) existingFallback.remove();
 
-            // Construction de l'URL brute GitHub
-            const githubAudioUrl = `https://raw.githubusercontent.com/christophePicard-code/musique-site/main/${encodeURIComponent(track.fileName)}`;
-            audio.src = githubAudioUrl;
+            // CORRECTION ICI: Attribution de la source audio en utilisant un lien relatif (fonctionne sur GitHub Pages)
+            audio.src = track.fileName; 
             audio.load();
 
             coverSpinner.classList.remove('hidden');
             coverSpinner.classList.add('flex');
+            dismissError();
 
             if (autoplay) {
                 initAudioContext();
@@ -618,10 +502,9 @@
                     coverSpinner.classList.remove('flex');
                     if (!isAudioContextBound) bindAudioSourceNode();
                 }).catch(err => {
-                    console.warn("Autoplay bloqué ou erreur de chargement audio:", err);
                     coverSpinner.classList.add('hidden');
                     coverSpinner.classList.remove('flex');
-                    showError(`Impossible de lire <b>${track.title}</b>. Vérifiez la disponibilité du fichier sur GitHub.`);
+                    showError(`Impossible de lire <b>${track.title}</b>. L'interaction de l'utilisateur est peut-être requise.`);
                     isPlaying = false;
                     updatePlayButtonUI();
                 });
@@ -647,7 +530,7 @@
                     isPlaying = true;
                     if (!isAudioContextBound) bindAudioSourceNode();
                 }).catch(err => {
-                    showError("Erreur de lecture. Veuillez relancer la piste.");
+                    showError("Erreur de lecture.");
                     isPlaying = false;
                 });
             }
@@ -664,12 +547,7 @@
 
         function playNext() {
             if (tracks.length === 0) return;
-            let nextIndex;
-            if (isShuffle) {
-                nextIndex = Math.floor(Math.random() * tracks.length);
-            } else {
-                nextIndex = (currentTrackIndex + 1) % tracks.length;
-            }
+            let nextIndex = isShuffle ? Math.floor(Math.random() * tracks.length) : (currentTrackIndex + 1) % tracks.length;
             loadTrack(nextIndex, true);
         }
 
@@ -691,82 +569,47 @@
         function toggleMute() {
             audio.muted = !audio.muted;
             const muteBtn = document.getElementById('mute-btn');
-            if (audio.muted) {
-                muteBtn.innerHTML = '<i class="fa-solid fa-volume-xmark text-rose-400"></i>';
-            } else {
-                muteBtn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
-            }
+            muteBtn.innerHTML = audio.muted ? '<i class="fa-solid fa-volume-xmark text-rose-400"></i>' : '<i class="fa-solid fa-volume-high"></i>';
         }
 
         function toggleShuffle() {
             isShuffle = !isShuffle;
             const btn = document.getElementById('shuffle-btn');
-            if (isShuffle) {
-                btn.classList.add('text-brand-cyan');
-                btn.classList.remove('text-slate-400');
-            } else {
-                btn.classList.remove('text-brand-cyan');
-                btn.classList.add('text-slate-400');
-            }
+            btn.className = isShuffle ? 'text-brand-cyan transition-colors text-sm' : 'text-slate-400 hover:text-white transition-colors text-sm';
         }
 
         function toggleRepeat() {
             isRepeat = !isRepeat;
             const btn = document.getElementById('repeat-btn');
-            if (isRepeat) {
-                btn.classList.add('text-brand-cyan');
-                btn.classList.remove('text-slate-400');
-            } else {
-                btn.classList.remove('text-brand-cyan');
-                btn.classList.add('text-slate-400');
-            }
+            btn.className = isRepeat ? 'text-brand-cyan transition-colors text-sm' : 'text-slate-400 hover:text-white transition-colors text-sm';
         }
 
         function toggleEqPanel() {
-            const panel = document.getElementById('eq-panel');
-            panel.classList.toggle('hidden');
+            document.getElementById('eq-panel').classList.toggle('hidden');
         }
 
         function updateBass(val) {
             document.getElementById('bass-val').textContent = val + ' dB';
             if (bassFilter) bassFilter.gain.value = parseFloat(val);
         }
-
         function updateMid(val) {
             document.getElementById('mid-val').textContent = val + ' dB';
             if (midFilter) midFilter.gain.value = parseFloat(val);
         }
-
         function updateTreble(val) {
             document.getElementById('treble-val').textContent = val + ' dB';
             if (trebleFilter) trebleFilter.gain.value = parseFloat(val);
         }
 
         function setEqPreset(preset) {
-            const bassSlider = document.getElementById('bass-slider');
-            const midSlider = document.getElementById('mid-slider');
-            const trebleSlider = document.getElementById('treble-slider');
-
-            if (preset === 'flat') {
-                bassSlider.value = 0;
-                midSlider.value = 0;
-                trebleSlider.value = 0;
-            } else if (preset === 'tekk') {
-                bassSlider.value = 9;
-                midSlider.value = 2;
-                trebleSlider.value = 6;
-            } else if (preset === 'club') {
-                bassSlider.value = 7;
-                midSlider.value = -1;
-                trebleSlider.value = 4;
-            } else if (preset === 'clarity') {
-                bassSlider.value = -2;
-                midSlider.value = 5;
-                trebleSlider.value = 3;
-            }
-            updateBass(bassSlider.value);
-            updateMid(midSlider.value);
-            updateTreble(trebleSlider.value);
+            const bass = document.getElementById('bass-slider');
+            const mid = document.getElementById('mid-slider');
+            const treble = document.getElementById('treble-slider');
+            if (preset === 'flat') { bass.value = 0; mid.value = 0; treble.value = 0; }
+            else if (preset === 'tekk') { bass.value = 9; mid.value = 2; treble.value = 6; }
+            else if (preset === 'club') { bass.value = 7; mid.value = -1; treble.value = 4; }
+            else if (preset === 'clarity') { bass.value = -2; mid.value = 5; treble.value = 3; }
+            updateBass(bass.value); updateMid(mid.value); updateTreble(treble.value);
         }
 
         function filterCategory(cat) {
@@ -777,35 +620,19 @@
             });
             event.currentTarget.classList.add('active', 'bg-brand-cyan', 'text-slate-950', 'font-bold', 'shadow-md', 'shadow-brand-cyan/20');
             event.currentTarget.classList.remove('bg-white/5', 'border', 'border-white/10', 'text-slate-300');
-
             document.getElementById('section-title').innerHTML = `<i class="fa-solid fa-compact-disc text-brand-cyan"></i> Pistes ${cat === 'ALL' ? 'Générales' : cat}`;
-            
-            // Highlight also in the sidebar
-            document.querySelectorAll('.category-btn').forEach(btn => {
-                if(cat !== 'ALL' && btn.innerText.includes(cat)) {
-                    btn.classList.add('bg-gradient-to-r', 'from-brand-purple/40', 'to-brand-cyan/20', 'text-white', 'border', 'border-brand-cyan/30');
-                    btn.classList.remove('text-slate-400');
-                } else {
-                    btn.classList.remove('bg-gradient-to-r', 'from-brand-purple/40', 'to-brand-cyan/20', 'text-white', 'border', 'border-brand-cyan/30');
-                    btn.classList.add('text-slate-400');
-                }
-            });
-
             renderTracks();
         }
 
-        function searchTracks() {
-            renderTracks();
-        }
+        function searchTracks() { renderTracks(); }
 
         function renderTracks() {
             const grid = document.getElementById('track-grid');
             const searchVal = document.getElementById('search-input').value.toLowerCase();
             
             const filtered = tracks.filter(t => {
-                const matchesCat = currentFilter === 'ALL' || t.category === currentFilter;
-                const matchesSearch = t.title.toLowerCase().includes(searchVal) || t.artist.toLowerCase().includes(searchVal);
-                return matchesCat && matchesSearch;
+                return (currentFilter === 'ALL' || t.category === currentFilter) && 
+                       (t.title.toLowerCase().includes(searchVal) || t.artist.toLowerCase().includes(searchVal));
             });
 
             document.getElementById('track-count').textContent = `${filtered.length} titre${filtered.length > 1 ? 's' : ''} disponible${filtered.length > 1 ? 's' : ''}`;
@@ -815,9 +642,7 @@
                     <div class="col-span-full py-16 text-center glass-card rounded-2xl">
                         <i class="fa-solid fa-music text-3xl text-slate-500 mb-3"></i>
                         <p class="text-slate-300 font-semibold text-sm">Aucune piste trouvée</p>
-                        <p class="text-xs text-slate-500 mt-1">Essayez un autre terme de recherche ou changez de catégorie.</p>
-                    </div>
-                `;
+                    </div>`;
                 return;
             }
 
@@ -850,32 +675,24 @@
 
         audio.addEventListener('timeupdate', () => {
             if (!audio.duration) return;
-            const progress = (audio.currentTime / audio.duration) * 100;
-            seekBar.value = progress;
-            
+            seekBar.value = (audio.currentTime / audio.duration) * 100;
             let curM = Math.floor(audio.currentTime / 60);
             let curS = Math.floor(audio.currentTime % 60);
             currentTimeEl.textContent = `${curM}:${curS < 10 ? '0' : ''}${curS}`;
-
             let durM = Math.floor(audio.duration / 60);
             let durS = Math.floor(audio.duration % 60);
             totalTimeEl.textContent = `${durM}:${durS < 10 ? '0' : ''}${durS}`;
         });
 
         audio.addEventListener('ended', () => {
-            if (isRepeat) {
-                audio.currentTime = 0;
-                audio.play();
-            } else {
-                playNext();
-            }
+            isRepeat ? (audio.currentTime = 0, audio.play()) : playNext();
         });
 
         audio.addEventListener('error', (e) => {
-            console.warn("Erreur de lecture audio détectée sur le flux GitHub:", e);
+            console.warn("Erreur audio:", e);
             coverSpinner.classList.add('hidden');
             coverSpinner.classList.remove('flex');
-            showError("Erreur de chargement du fichier audio depuis GitHub. Vérifiez que les fichiers .mp3 sont bien présents à la racine de votre dépôt.");
+            showError("Erreur de chargement. Vérifiez que les fichiers sont sur GitHub Pages avec le même nom exact.");
             isPlaying = false;
             updatePlayButtonUI();
         });
@@ -885,26 +702,19 @@
 
         function drawVisualizer() {
             requestAnimationFrame(drawVisualizer);
-
             canvas.width = canvas.offsetWidth;
             canvas.height = canvas.offsetHeight;
-
             const width = canvas.width;
             const height = canvas.height;
-
             canvasCtx.clearRect(0, 0, width, height);
 
             if (!isPlaying || !analyser) {
                 canvasCtx.fillStyle = 'rgba(0, 242, 254, 0.2)';
                 canvasCtx.fillRect(0, height / 2 - 1, width, 2);
-                document.getElementById('meter-bass').style.width = '0%';
-                document.getElementById('meter-mid').style.width = '0%';
-                document.getElementById('meter-treble').style.width = '0%';
                 return;
             }
 
             analyser.getByteFrequencyData(dataArray);
-
             let bassSum = 0, midSum = 0, trebleSum = 0;
             const third = Math.floor(dataArray.length / 3);
             for(let i=0; i<third; i++) bassSum += dataArray[i];
@@ -921,24 +731,19 @@
 
             const barWidth = (width / dataArray.length) * 2.5;
             let x = 0;
-
             for (let i = 0; i < dataArray.length; i++) {
                 const barHeight = (dataArray[i] / 255) * height;
-
                 const gradient = canvasCtx.createLinearGradient(0, height, 0, 0);
                 gradient.addColorStop(0, '#7928ca');
                 gradient.addColorStop(0.5, '#00f2fe');
                 gradient.addColorStop(1, '#ff0080');
-
                 canvasCtx.fillStyle = gradient;
                 canvasCtx.fillRect(x, height - barHeight, barWidth, barHeight);
-
                 x += barWidth + 1;
                 if (x > width) break;
             }
         }
 
-        // Démarrage : afficher "Tous" par défaut
         renderTracks();
         drawVisualizer();
     </script>
