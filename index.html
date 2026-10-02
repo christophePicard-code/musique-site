@@ -134,14 +134,11 @@
                 <div>
                     <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 px-3">Menu</p>
                     <div class="space-y-1">
-                        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-brand-cyan/10 text-brand-cyan font-medium transition-all">
+                        <a href="#" onclick="filterCategory('ALL')" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-brand-cyan/10 text-brand-cyan font-medium transition-all">
                             <i class="fa-solid fa-house w-5"></i> Découvrir
                         </a>
                         <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 font-medium transition-all">
                             <i class="fa-solid fa-fire w-5"></i> Tendances
-                        </a>
-                        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 font-medium transition-all">
-                            <i class="fa-solid fa-heart w-5"></i> Favoris
                         </a>
                     </div>
                 </div>
@@ -149,20 +146,20 @@
                 <div>
                     <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 px-3">Genres</p>
                     <div class="space-y-1" id="sidebar-categories">
-                        <button onclick="filterCategory('HARDTEKK')" class="category-btn active w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium transition-all bg-gradient-to-r from-brand-purple/40 to-brand-cyan/20 text-white border border-brand-cyan/30">
+                        <button onclick="filterCategory('HARDTEKK')" class="category-btn w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all">
                             <span class="flex items-center gap-2"><i class="fa-solid fa-bolt text-brand-cyan"></i> HARDTEKK</span>
                             <span class="text-xs bg-brand-cyan/20 text-brand-cyan px-2 py-0.5 rounded-full font-bold">6</span>
                         </button>
-                        <button onclick="filterCategory('TECHNO')" class="category-btn w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all">
-                            <span class="flex items-center gap-2"><i class="fa-solid fa-wave-square"></i> TECHNO</span>
-                            <span class="text-xs bg-white/5 px-2 py-0.5 rounded-full">0</span>
-                        </button>
                         <button onclick="filterCategory('ELECTRO')" class="category-btn w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all">
                             <span class="flex items-center gap-2"><i class="fa-solid fa-sliders"></i> ELECTRO</span>
-                            <span class="text-xs bg-white/5 px-2 py-0.5 rounded-full">0</span>
+                            <span class="text-xs bg-white/5 px-2 py-0.5 rounded-full">4</span>
                         </button>
                         <button onclick="filterCategory('DEEP HOUSE')" class="category-btn w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all">
                             <span class="flex items-center gap-2"><i class="fa-solid fa-cloud-moon"></i> DEEP HOUSE</span>
+                            <span class="text-xs bg-white/5 px-2 py-0.5 rounded-full">1</span>
+                        </button>
+                        <button onclick="filterCategory('TECHNO')" class="category-btn w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-wave-square"></i> TECHNO</span>
                             <span class="text-xs bg-white/5 px-2 py-0.5 rounded-full">0</span>
                         </button>
                     </div>
@@ -193,51 +190,28 @@
                 <button onclick="dismissError()" class="px-2 py-1 rounded-lg bg-rose-500/30 hover:bg-rose-500/50 text-white font-bold text-xs">Fermer</button>
             </div>
 
-            <!-- Featured Banner -->
-            <section class="relative rounded-3xl overflow-hidden mb-10 glass-panel border-white/10 p-6 md:p-10">
-                <div class="absolute inset-0 bg-gradient-to-r from-brand-purple/60 via-slate-950/80 to-slate-950/90 z-0"></div>
-                <div class="absolute -right-20 -top-20 w-80 h-80 bg-brand-cyan/20 rounded-full blur-3xl neon-glow"></div>
-                <div class="relative z-10 max-w-xl">
-                    <span class="px-3 py-1 rounded-full bg-brand-cyan/20 text-brand-cyan border border-brand-cyan/30 text-xs font-bold tracking-wide uppercase inline-block mb-3">
-                        <i class="fa-solid fa-fire mr-1"></i> Genre Vedette
-                    </span>
-                    <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white mb-3">
-                        HARDTEKK <span class="text-brand-cyan">POWER</span>
-                    </h2>
-                    <p class="text-slate-300 text-sm md:text-base mb-6 leading-relaxed">
-                        Écoutez vos morceaux Hardtekk hébergés directement depuis votre dépôt GitHub avec égaliseur sonore et spectromètre en temps réel.
-                    </p>
-                    <button onclick="playAllHardtekk()" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-brand-cyan to-blue-600 text-slate-950 font-bold hover:brightness-110 transition-all shadow-lg shadow-brand-cyan/25 flex items-center gap-2">
-                        <i class="fa-solid fa-play"></i> Lancer la Playlist (6 Titres)
-                    </button>
-                </div>
-            </section>
-
             <!-- Category Pills -->
             <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-6 custom-scrollbar">
-                <button onclick="filterCategory('ALL')" class="pill-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-white/5 border border-white/10 text-slate-300 hover:text-white transition-all">
-                    Tous
+                <button onclick="filterCategory('ALL')" class="pill-btn active px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-brand-cyan text-slate-950 font-bold shadow-md shadow-brand-cyan/20 transition-all">
+                    Tous (11)
                 </button>
-                <button onclick="filterCategory('HARDTEKK')" class="pill-btn active px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-brand-cyan text-slate-950 font-bold shadow-md shadow-brand-cyan/20 transition-all">
+                <button onclick="filterCategory('HARDTEKK')" class="pill-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-white/5 border border-white/10 text-slate-300 hover:text-white transition-all">
                     ⚡ HARDTEKK (6)
                 </button>
-                <button onclick="filterCategory('TECHNO')" class="pill-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-white/5 border border-white/10 text-slate-300 hover:text-white transition-all">
-                    🎹 TECHNO
-                </button>
                 <button onclick="filterCategory('ELECTRO')" class="pill-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-white/5 border border-white/10 text-slate-300 hover:text-white transition-all">
-                    🎛️ ELECTRO
+                    🎛️ ELECTRO (4)
                 </button>
                 <button onclick="filterCategory('DEEP HOUSE')" class="pill-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-white/5 border border-white/10 text-slate-300 hover:text-white transition-all">
-                    🌙 DEEP HOUSE
+                    🌙 DEEP HOUSE (1)
                 </button>
             </div>
 
             <!-- Track Section Header -->
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-xl font-bold text-white flex items-center gap-2" id="section-title">
-                    <i class="fa-solid fa-compact-disc text-brand-cyan"></i> Pistes HARDTEKK
+                    <i class="fa-solid fa-compact-disc text-brand-cyan"></i> Pistes Générales
                 </h3>
-                <span id="track-count" class="text-xs text-slate-400 font-medium">6 titres disponibles</span>
+                <span id="track-count" class="text-xs text-slate-400 font-medium">11 titres disponibles</span>
             </div>
 
             <!-- Track Grid -->
@@ -247,6 +221,7 @@
         </main>
     </div>
 
+    <!-- Player Footer -->
     <footer class="fixed bottom-0 left-0 right-0 glass-panel border-t border-white/10 px-4 py-3 md:px-8 md:py-4 z-50">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
             
@@ -266,7 +241,6 @@
 
             <!-- Central Player Controls & Visualizer -->
             <div class="flex flex-col items-center gap-2 w-full md:w-2/4">
-                <!-- Real-time Frequency Meters -->
                 <div class="w-full flex items-center justify-between text-[10px] font-bold text-slate-400 px-1 gap-2">
                     <div class="flex items-center gap-1.5 flex-1">
                         <span class="text-brand-pink flex items-center gap-1"><i class="fa-solid fa-drum text-[9px]"></i> BASSES</span>
@@ -288,10 +262,8 @@
                     </div>
                 </div>
 
-                <!-- Visualizer Canvas -->
                 <canvas id="visualizer" class="w-full h-10 rounded-lg bg-slate-950/60 border border-white/10 mb-1"></canvas>
 
-                <!-- Controls -->
                 <div class="flex items-center gap-5">
                     <button onclick="toggleShuffle()" id="shuffle-btn" class="text-slate-400 hover:text-white transition-colors text-sm" title="Lecture aléatoire">
                         <i class="fa-solid fa-shuffle"></i>
@@ -310,7 +282,6 @@
                     </button>
                 </div>
 
-                <!-- Progress Bar & Timers -->
                 <div class="flex items-center gap-3 w-full max-w-md">
                     <span id="current-time" class="text-[11px] font-mono text-slate-400 w-9 text-right">0:00</span>
                     <input type="range" id="seek-bar" value="0" max="100" class="flex-1" oninput="seekAudio(this.value)">
@@ -332,6 +303,7 @@
         </div>
     </footer>
 
+    <!-- EQ Panel -->
     <div id="eq-panel" class="hidden fixed bottom-24 right-4 md:right-8 w-80 glass-panel rounded-2xl p-5 border border-white/15 shadow-2xl z-50 backdrop-blur-xl transition-all">
         <div class="flex items-center justify-between mb-4 border-b border-white/10 pb-3">
             <h3 class="font-bold text-sm text-white flex items-center gap-2">
@@ -342,7 +314,6 @@
             </button>
         </div>
 
-        <!-- EQ Presets -->
         <div class="mb-4">
             <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-2">Préréglages rapides</span>
             <div class="grid grid-cols-4 gap-1.5">
@@ -353,7 +324,6 @@
             </div>
         </div>
 
-        <!-- Frequency Sliders -->
         <div class="space-y-4">
             <div>
                 <div class="flex justify-between items-center text-xs mb-1">
@@ -403,15 +373,16 @@
             "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=500&q=80"
         ];
 
+        // Tous les 11 fichiers basés sur l'image fournie
         const tracks = [
             {
                 id: 1,
-                title: "SOMETIMES (HARDTEKK)",
-                artist: "Hardtekk Producer",
-                category: "HARDTEKK",
-                cover: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/thumb_SOMETIMES.png",
+                title: "Breaking Me",
+                artist: "Topic, A7S",
+                category: "ELECTRO",
+                cover: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/thumb_Breaking%20Me.png",
                 fallbackCover: fallbackCovers[0],
-                fileName: "SOMETIMES(HARDTEKK).mp3"
+                fileName: "Breaking Me.mp3"
             },
             {
                 id: 2,
@@ -434,7 +405,7 @@
             {
                 id: 4,
                 title: "Eins Zwei Polizei (HARDTEKK)",
-                artist: "Hardtekk Remix",
+                artist: "Mo-Do Remix",
                 category: "HARDTEKK",
                 cover: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/thumb_Eins%20Zwei%20Polizei.png",
                 fallbackCover: fallbackCovers[3],
@@ -442,30 +413,74 @@
             },
             {
                 id: 5,
-                title: "UNDRESS REHEARSAL (HARDTEKK)",
-                artist: "Hardtekk Producer",
-                category: "HARDTEKK",
-                cover: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/thumb_UNDRESS%20REHEARSAL.png",
+                title: "In my mind",
+                artist: "Dynoro, Gigi D'Agostino",
+                category: "ELECTRO",
+                cover: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/thumb_in%20my%20mind.png",
                 fallbackCover: fallbackCovers[4],
-                fileName: "UNDRESS REHEARSAL(HARDTEKK).mp3"
+                fileName: "In my mind.mp3"
             },
             {
                 id: 6,
+                title: "Monster",
+                artist: "LUM!X, Gabry Ponte",
+                category: "ELECTRO",
+                cover: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/thumb_Monster.png",
+                fallbackCover: fallbackCovers[0],
+                fileName: "Monster.mp3"
+            },
+            {
+                id: 7,
                 title: "ON THE FLOOR (HARDTEKK)",
                 artist: "Hardtekk Remix",
                 category: "HARDTEKK",
                 cover: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/thumb_ON%20THE%20FLOOR.png",
-                fallbackCover: fallbackCovers[0],
+                fallbackCover: fallbackCovers[1],
                 fileName: "ON THE FLOOR(HARDTEKK).mp3"
+            },
+            {
+                id: 8,
+                title: "Piece Of Your Heart",
+                artist: "Meduza",
+                category: "DEEP HOUSE",
+                cover: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/thumb_Piece%20Of%20Your%20Heart.png",
+                fallbackCover: fallbackCovers[2],
+                fileName: "Piece Of Your Heart.mp3"
+            },
+            {
+                id: 9,
+                title: "Roses",
+                artist: "SAINt JHN",
+                category: "ELECTRO",
+                cover: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/thumb_roses.png",
+                fallbackCover: fallbackCovers[3],
+                fileName: "Roses.mp3"
+            },
+            {
+                id: 10,
+                title: "SOMETIMES (HARDTEKK)",
+                artist: "Hardtekk Producer",
+                category: "HARDTEKK",
+                cover: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/thumb_SOMETIMES.png",
+                fallbackCover: fallbackCovers[4],
+                fileName: "SOMETIMES(HARDTEKK).mp3"
+            },
+            {
+                id: 11,
+                title: "UNDRESS REHEARSAL (HARDTEKK)",
+                artist: "Hardtekk Producer",
+                category: "HARDTEKK",
+                cover: "https://raw.githubusercontent.com/christophePicard-code/musique-site/main/thumb_UNDRESS%20REHEARSAL.png",
+                fallbackCover: fallbackCovers[0],
+                fileName: "UNDRESS REHEARSAL(HARDTEKK).mp3"
             }
         ];
 
         let currentTrackIndex = -1;
-        let activeFallbackIndex = 0;
         let isPlaying = false;
         let isShuffle = false;
         let isRepeat = false;
-        let currentFilter = 'HARDTEKK';
+        let currentFilter = 'ALL'; // Modification : Afficher 'Tous' par défaut
 
         const audio = document.getElementById('audio-element');
         const playBtn = document.getElementById('play-btn');
@@ -505,7 +520,7 @@
                             <i class="fa-solid fa-compact-disc text-lg animate-spin" style="animation-duration: 10s;"></i>
                         </div>
                         <span class="text-[11px] font-bold text-white leading-tight uppercase truncate max-w-full">${trackTitle}</span>
-                        <span class="text-[9px] text-brand-cyan font-mono mt-0.5">HARDTEKK</span>
+                        <span class="text-[9px] text-brand-cyan font-mono mt-0.5">TRACK</span>
                     `;
                     parent.appendChild(fallbackDiv);
                 }
@@ -583,7 +598,7 @@
             const existingFallback = playerCover.parentElement.querySelector('.gradient-cover-fallback');
             if (existingFallback) existingFallback.remove();
 
-            // Construction de l'URL brute GitHub pour le fichier audio
+            // Construction de l'URL brute GitHub
             const githubAudioUrl = `https://raw.githubusercontent.com/christophePicard-code/musique-site/main/${encodeURIComponent(track.fileName)}`;
             audio.src = githubAudioUrl;
             audio.load();
@@ -764,16 +779,23 @@
             event.currentTarget.classList.remove('bg-white/5', 'border', 'border-white/10', 'text-slate-300');
 
             document.getElementById('section-title').innerHTML = `<i class="fa-solid fa-compact-disc text-brand-cyan"></i> Pistes ${cat === 'ALL' ? 'Générales' : cat}`;
+            
+            // Highlight also in the sidebar
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                if(cat !== 'ALL' && btn.innerText.includes(cat)) {
+                    btn.classList.add('bg-gradient-to-r', 'from-brand-purple/40', 'to-brand-cyan/20', 'text-white', 'border', 'border-brand-cyan/30');
+                    btn.classList.remove('text-slate-400');
+                } else {
+                    btn.classList.remove('bg-gradient-to-r', 'from-brand-purple/40', 'to-brand-cyan/20', 'text-white', 'border', 'border-brand-cyan/30');
+                    btn.classList.add('text-slate-400');
+                }
+            });
+
             renderTracks();
         }
 
         function searchTracks() {
             renderTracks();
-        }
-
-        function playAllHardtekk() {
-            filterCategory('HARDTEKK');
-            loadTrack(0, true);
         }
 
         function renderTracks() {
@@ -826,7 +848,6 @@
             }).join('');
         }
 
-        // Audio Event Listeners
         audio.addEventListener('timeupdate', () => {
             if (!audio.duration) return;
             const progress = (audio.currentTime / audio.duration) * 100;
@@ -859,7 +880,6 @@
             updatePlayButtonUI();
         });
 
-        // Visualizer Loop & Frequency Meters Animation
         const canvas = document.getElementById('visualizer');
         const canvasCtx = canvas.getContext('2d');
 
@@ -875,7 +895,6 @@
             canvasCtx.clearRect(0, 0, width, height);
 
             if (!isPlaying || !analyser) {
-                // Flat idle line
                 canvasCtx.fillStyle = 'rgba(0, 242, 254, 0.2)';
                 canvasCtx.fillRect(0, height / 2 - 1, width, 2);
                 document.getElementById('meter-bass').style.width = '0%';
@@ -886,7 +905,6 @@
 
             analyser.getByteFrequencyData(dataArray);
 
-            // Calculate simulated frequency bands for meters
             let bassSum = 0, midSum = 0, trebleSum = 0;
             const third = Math.floor(dataArray.length / 3);
             for(let i=0; i<third; i++) bassSum += dataArray[i];
@@ -901,7 +919,6 @@
             document.getElementById('meter-mid').style.width = Math.min(100, midAvg * 1.3) + '%';
             document.getElementById('meter-treble').style.width = Math.min(100, trebleAvg * 1.3) + '%';
 
-            // Draw Frequency Bars
             const barWidth = (width / dataArray.length) * 2.5;
             let x = 0;
 
@@ -921,7 +938,7 @@
             }
         }
 
-        // Initial render
+        // Démarrage : afficher "Tous" par défaut
         renderTracks();
         drawVisualizer();
     </script>
