@@ -164,16 +164,7 @@
                 </div>
             </header>
 
-            <!-- Status Banner for Audio Errors -->
-            <div id="error-toast" class="hidden mb-6 p-4 rounded-2xl bg-rose-500/20 border border-rose-500/40 text-rose-200 text-xs md:text-sm flex items-center justify-between gap-3 shadow-lg">
-                <div class="flex items-center gap-3">
-                    <i class="fa-solid fa-triangle-exclamation text-rose-400 text-lg"></i>
-                    <span id="error-toast-text">Erreur de lecture audio.</span>
-                </div>
-                <button onclick="dismissError()" class="px-2 py-1 rounded-lg bg-rose-500/30 hover:bg-rose-500/50 text-white font-bold text-xs">Fermer</button>
-            </div>
-
-            <!-- Category Pills (mobile & desktop) -->
+            <!-- Category Pills -->
             <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-6 custom-scrollbar">
                 <button onclick="filterCategory('ALL', this)" class="pill-btn active px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-brand-cyan text-slate-950 font-bold shadow-md shadow-brand-cyan/20 transition-all">
                     Tous (11)
@@ -199,14 +190,37 @@
 
             <!-- Track Grid -->
             <div id="track-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                <!-- Les cartes sont générées dynamiquement en Javascript -->
+                <!-- Les cartes sont générées dynamiquement -->
             </div>
         </main>
     </div>
 
     <!-- Player Footer -->
     <footer class="fixed bottom-0 left-0 right-0 glass-panel border-t border-white/10 px-4 py-3 md:px-8 md:py-4 z-50">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+        
+        <!-- PANNEAU ÉGALISEUR (Caché par défaut) -->
+        <div id="eq-panel" class="hidden absolute bottom-[100%] right-4 md:right-8 mb-4 glass-panel p-5 rounded-2xl w-64 flex-col gap-5 shadow-2xl border border-white/10">
+            <h4 class="text-white text-sm font-bold flex items-center gap-2">
+                <i class="fa-solid fa-sliders text-brand-cyan"></i> Égaliseur Audio
+            </h4>
+            
+            <div class="flex flex-col gap-4">
+                <div class="flex items-center gap-3">
+                    <span class="text-xs text-slate-300 font-semibold w-14">Basses</span>
+                    <input type="range" min="-15" max="15" value="0" class="flex-1" oninput="updateEQ('bass', this.value)">
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="text-xs text-slate-300 font-semibold w-14">Médiums</span>
+                    <input type="range" min="-15" max="15" value="0" class="flex-1" oninput="updateEQ('mid', this.value)">
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="text-xs text-slate-300 font-semibold w-14">Aigus</span>
+                    <input type="range" min="-15" max="15" value="0" class="flex-1" oninput="updateEQ('treble', this.value)">
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 relative">
             
             <div class="flex items-center gap-4 w-full md:w-1/4">
                 <div class="relative w-12 h-12 md:w-14 md:h-14 rounded-xl overflow-hidden bg-slate-800 border border-white/10 flex-shrink-0 group">
@@ -250,6 +264,10 @@
             </div>
 
             <div class="hidden md:flex items-center justify-end gap-3 w-1/4">
+                <!-- Bouton EQ -->
+                <button onclick="toggleEQ()" id="eq-btn" class="text-slate-400 hover:text-brand-cyan transition-colors mr-2" title="Égaliseur">
+                    <i class="fa-solid fa-sliders"></i>
+                </button>
                 <button onclick="toggleMute()" id="mute-btn" class="text-slate-400 hover:text-white transition-colors">
                     <i class="fa-solid fa-volume-high"></i>
                 </button>
@@ -258,7 +276,6 @@
         </div>
     </footer>
 
-    <!-- La balise audio modifiée pour éviter les blocages locaux -->
     <audio id="audio-element" preload="auto"></audio>
 
     <script>
@@ -284,24 +301,16 @@
             { id: 11, title: "UNDRESS REHEARSAL (HARDTEKK)", artist: "Hardtekk Producer", category: "HARDTEKK", cover: "./thumb_UNDRESS REHEARSAL.png", fallbackCover: fallbackCovers[0], fileName: "UNDRESS REHEARSAL(HARDTEKK).mp3" }
         ];
 
-        // --- GESTION DES FAVORIS ---
         let favoriteIds = JSON.parse(localStorage.getItem('harmonie_favorites')) || [];
 
         function toggleFavorite(event, trackId) {
-            event.stopPropagation(); // Empêche de lancer la musique quand on clique sur le cœur
-            
+            event.stopPropagation();
             if (favoriteIds.includes(trackId)) {
-                // Retirer des favoris
                 favoriteIds = favoriteIds.filter(id => id !== trackId);
             } else {
-                // Ajouter aux favoris
                 favoriteIds.push(trackId);
             }
-            
-            // Sauvegarder dans le navigateur
             localStorage.setItem('harmonie_favorites', JSON.stringify(favoriteIds));
-            
-            // Recharger l'affichage
             renderTracks();
         }
 
@@ -321,10 +330,15 @@
         const currentTimeEl = document.getElementById('current-time');
         const totalTimeEl = document.getElementById('total-time');
 
+        // Variables pour l'AudioContext et l'Égaliseur (EQ)
         let audioCtx = null;
         let analyser = null;
         let audioSource = null;
         let dataArray = null;
+        
+        let filterBass = null;
+        let filterMid = null;
+        let filterTreble = null;
 
         function handleImageError(img, trackTitle = 'HARMONIE', fallbackUrl = '') {
             img.onerror = null;
@@ -355,16 +369,72 @@
                 try {
                     const AudioContext = window.AudioContext || window.webkitAudioContext;
                     audioCtx = new AudioContext();
+                    
                     analyser = audioCtx.createAnalyser();
                     analyser.fftSize = 128;
                     dataArray = new Uint8Array(analyser.frequencyBinCount);
                     
                     audioSource = audioCtx.createMediaElementSource(audio);
-                    audioSource.connect(analyser);
+                    
+                    // --- CRÉATION DES FILTRES EQ ---
+                    // Basses (~250Hz)
+                    filterBass = audioCtx.createBiquadFilter();
+                    filterBass.type = "lowshelf";
+                    filterBass.frequency.value = 250;
+                    filterBass.gain.value = 0;
+
+                    // Médiums (~1000Hz)
+                    filterMid = audioCtx.createBiquadFilter();
+                    filterMid.type = "peaking";
+                    filterMid.frequency.value = 1000;
+                    filterMid.Q.value = 1;
+                    filterMid.gain.value = 0;
+
+                    // Aigus (~4000Hz)
+                    filterTreble = audioCtx.createBiquadFilter();
+                    filterTreble.type = "highshelf";
+                    filterTreble.frequency.value = 4000;
+                    filterTreble.gain.value = 0;
+
+                    // Connexion en chaîne : Source -> Basses -> Médiums -> Aigus -> Analyser -> Sortie (Haut-parleurs)
+                    audioSource.connect(filterBass);
+                    filterBass.connect(filterMid);
+                    filterMid.connect(filterTreble);
+                    filterTreble.connect(analyser);
                     analyser.connect(audioCtx.destination);
                 } catch (e) {
                     console.warn('Web Audio API not fully supported', e);
                 }
+            }
+        }
+
+        // Fonction pour afficher/cacher le panneau EQ
+        function toggleEQ() {
+            const panel = document.getElementById('eq-panel');
+            const btn = document.getElementById('eq-btn');
+            
+            if (panel.classList.contains('hidden')) {
+                panel.classList.remove('hidden');
+                panel.classList.add('flex');
+                btn.classList.replace('text-slate-400', 'text-brand-cyan');
+            } else {
+                panel.classList.add('hidden');
+                panel.classList.remove('flex');
+                btn.classList.replace('text-brand-cyan', 'text-slate-400');
+            }
+        }
+
+        // Fonction pour modifier les valeurs de l'EQ
+        function updateEQ(band, value) {
+            if (!audioCtx) initAudioContext();
+            
+            // Si la sécurité bloque l'accès, on ne peut pas modifier, mais on tente quand même
+            try {
+                if (band === 'bass' && filterBass) filterBass.gain.value = value;
+                if (band === 'mid' && filterMid) filterMid.gain.value = value;
+                if (band === 'treble' && filterTreble) filterTreble.gain.value = value;
+            } catch (e) {
+                console.warn("Impossible de modifier l'EQ", e);
             }
         }
 
@@ -469,13 +539,11 @@
         function filterCategory(cat, btnElement) {
             currentFilter = cat;
 
-            // Mise à jour visuelle des boutons "Pill"
             document.querySelectorAll('.pill-btn').forEach(btn => {
                 btn.classList.remove('active', 'bg-brand-cyan', 'text-slate-950', 'font-bold', 'shadow-md', 'shadow-brand-cyan/20');
                 btn.classList.add('bg-white/5', 'border', 'border-white/10', 'text-slate-300');
             });
             
-            // Mise à jour du titre de la section
             let titleHtml = '';
             if(cat === 'FAVORITES') titleHtml = '<i class="fa-solid fa-heart text-brand-pink"></i> Mes Favoris';
             else if(cat === 'ALL') titleHtml = '<i class="fa-solid fa-compact-disc text-brand-cyan"></i> Pistes Générales';
@@ -493,7 +561,6 @@
             const searchVal = document.getElementById('search-input').value.toLowerCase();
             
             const filtered = tracks.filter(t => {
-                // Logique de filtrage (Catégorie + Favoris + Recherche)
                 let categoryMatch = false;
                 if (currentFilter === 'ALL') categoryMatch = true;
                 else if (currentFilter === 'FAVORITES') categoryMatch = favoriteIds.includes(t.id);
@@ -524,7 +591,6 @@
                 return `
                     <div onclick="loadTrack(${track.id - 1}, true)" class="glass-card rounded-2xl p-4 cursor-pointer group relative overflow-hidden flex flex-col justify-between ${isCurrent ? 'border-brand-cyan/60 bg-white/10 shadow-lg shadow-brand-cyan/10' : ''}">
                         
-                        <!-- Bouton Favoris -->
                         <button onclick="toggleFavorite(event, ${track.id})" class="absolute top-6 left-6 z-10 w-8 h-8 rounded-full bg-slate-900/70 backdrop-blur-md flex items-center justify-center hover:scale-110 transition-all ${isFav ? 'text-brand-pink shadow-[0_0_10px_rgba(255,0,128,0.3)]' : 'text-slate-400 hover:text-brand-pink'}">
                             <i class="fa-${isFav ? 'solid' : 'regular'} fa-heart"></i>
                         </button>
