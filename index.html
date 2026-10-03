@@ -195,44 +195,73 @@
         </main>
     </div>
 
+    <!-- Modale Égaliseur (Mobile & Desktop) -->
+    <div id="eq-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden items-center justify-center p-4 opacity-0 transition-all duration-300">
+        <div class="bg-slate-900 border border-white/10 rounded-2xl p-6 w-full max-w-sm shadow-2xl transform scale-95 transition-all duration-300" id="eq-modal-content">
+            <div class="flex items-center justify-between mb-6">
+                <h4 class="text-white text-lg font-bold flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-brand-cyan"></i> Égaliseur
+                </h4>
+                <button onclick="toggleEQ()" class="text-slate-400 hover:text-white w-8 h-8 rounded-full bg-white/5 flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <div class="flex flex-col gap-6">
+                <!-- Basses -->
+                <div class="flex flex-col gap-2">
+                    <div class="flex justify-between items-center text-xs font-semibold">
+                        <span class="text-slate-300">Basses</span>
+                        <span id="bass-val" class="text-slate-400">0 dB</span>
+                    </div>
+                    <input type="range" id="eq-bass-slider" min="-30" max="30" value="0" class="w-full" oninput="updateEQ('bass', this.value)">
+                </div>
+                <!-- Médiums -->
+                <div class="flex flex-col gap-2">
+                    <div class="flex justify-between items-center text-xs font-semibold">
+                        <span class="text-slate-300">Médiums</span>
+                        <span id="mid-val" class="text-slate-400">0 dB</span>
+                    </div>
+                    <input type="range" id="eq-mid-slider" min="-30" max="30" value="0" class="w-full" oninput="updateEQ('mid', this.value)">
+                </div>
+                <!-- Aigus -->
+                <div class="flex flex-col gap-2">
+                    <div class="flex justify-between items-center text-xs font-semibold">
+                        <span class="text-slate-300">Aigus</span>
+                        <span id="treble-val" class="text-slate-400">0 dB</span>
+                    </div>
+                    <input type="range" id="eq-treble-slider" min="-30" max="30" value="0" class="w-full" oninput="updateEQ('treble', this.value)">
+                </div>
+            </div>
+
+            <button onclick="resetEQ()" class="mt-8 w-full py-2.5 rounded-xl border border-white/10 text-slate-300 text-sm font-semibold hover:bg-white/5 hover:text-white transition-colors">
+                <i class="fa-solid fa-rotate-right mr-2"></i>Réinitialiser
+            </button>
+        </div>
+    </div>
+
     <!-- Player Footer -->
     <footer class="fixed bottom-0 left-0 right-0 glass-panel border-t border-white/10 px-4 py-3 md:px-8 md:py-4 z-50">
         
-        <!-- PANNEAU ÉGALISEUR (Caché par défaut) -->
-        <div id="eq-panel" class="hidden absolute bottom-[100%] right-4 md:right-8 mb-4 glass-panel p-5 rounded-2xl w-64 flex-col gap-5 shadow-2xl border border-white/10">
-            <h4 class="text-white text-sm font-bold flex items-center gap-2">
-                <i class="fa-solid fa-sliders text-brand-cyan"></i> Égaliseur Audio
-            </h4>
-            
-            <div class="flex flex-col gap-4">
-                <div class="flex items-center gap-3">
-                    <span class="text-xs text-slate-300 font-semibold w-14">Basses</span>
-                    <input type="range" min="-15" max="15" value="0" class="flex-1" oninput="updateEQ('bass', this.value)">
-                </div>
-                <div class="flex items-center gap-3">
-                    <span class="text-xs text-slate-300 font-semibold w-14">Médiums</span>
-                    <input type="range" min="-15" max="15" value="0" class="flex-1" oninput="updateEQ('mid', this.value)">
-                </div>
-                <div class="flex items-center gap-3">
-                    <span class="text-xs text-slate-300 font-semibold w-14">Aigus</span>
-                    <input type="range" min="-15" max="15" value="0" class="flex-1" oninput="updateEQ('treble', this.value)">
-                </div>
-            </div>
-        </div>
-
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 relative">
             
-            <div class="flex items-center gap-4 w-full md:w-1/4">
-                <div class="relative w-12 h-12 md:w-14 md:h-14 rounded-xl overflow-hidden bg-slate-800 border border-white/10 flex-shrink-0 group">
-                    <img id="player-cover" src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&q=80" alt="Cover" class="w-full h-full object-cover" onerror="handleImageError(this, 'HARMONIE')">
-                    <div id="cover-spinner" class="absolute inset-0 bg-slate-950/60 hidden items-center justify-center">
-                        <i class="fa-solid fa-compact-disc text-brand-cyan text-xl animate-spin"></i>
+            <div class="flex items-center justify-between w-full md:w-1/4">
+                <div class="flex items-center gap-4 overflow-hidden">
+                    <div class="relative w-12 h-12 md:w-14 md:h-14 rounded-xl overflow-hidden bg-slate-800 border border-white/10 flex-shrink-0 group">
+                        <img id="player-cover" src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&q=80" alt="Cover" class="w-full h-full object-cover" onerror="handleImageError(this, 'HARMONIE')">
+                        <div id="cover-spinner" class="absolute inset-0 bg-slate-950/60 hidden items-center justify-center">
+                            <i class="fa-solid fa-compact-disc text-brand-cyan text-xl animate-spin"></i>
+                        </div>
+                    </div>
+                    <div class="overflow-hidden">
+                        <h4 id="player-title" class="font-bold text-sm text-white truncate">Sélectionnez un titre</h4>
+                        <p id="player-artist" class="text-xs text-slate-400 truncate">Cliquez sur une piste pour lancer</p>
                     </div>
                 </div>
-                <div class="overflow-hidden">
-                    <h4 id="player-title" class="font-bold text-sm text-white truncate">Sélectionnez un titre</h4>
-                    <p id="player-artist" class="text-xs text-slate-400 truncate">Cliquez sur une piste pour lancer</p>
-                </div>
+                <!-- Bouton EQ Mobile (Visible uniquement sur mobile) -->
+                <button onclick="toggleEQ()" class="md:hidden w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-300 hover:text-brand-cyan hover:bg-white/10 transition-colors flex-shrink-0 border border-white/5">
+                    <i class="fa-solid fa-sliders text-lg"></i>
+                </button>
             </div>
 
             <div class="flex flex-col items-center gap-2 w-full md:w-2/4">
@@ -408,34 +437,68 @@
             }
         }
 
-        // Fonction pour afficher/cacher le panneau EQ
+        // Fonction pour afficher/cacher la Modale EQ
         function toggleEQ() {
-            const panel = document.getElementById('eq-panel');
-            const btn = document.getElementById('eq-btn');
+            const modal = document.getElementById('eq-modal');
+            const modalContent = document.getElementById('eq-modal-content');
             
-            if (panel.classList.contains('hidden')) {
-                panel.classList.remove('hidden');
-                panel.classList.add('flex');
-                btn.classList.replace('text-slate-400', 'text-brand-cyan');
+            if (modal.classList.contains('hidden')) {
+                // Afficher
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                // Petit délai pour l'animation d'opacité et de scale
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    modalContent.classList.remove('scale-95');
+                    modalContent.classList.add('scale-100');
+                }, 10);
             } else {
-                panel.classList.add('hidden');
-                panel.classList.remove('flex');
-                btn.classList.replace('text-brand-cyan', 'text-slate-400');
+                // Cacher
+                modal.classList.add('opacity-0');
+                modalContent.classList.remove('scale-100');
+                modalContent.classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                }, 300); // Temps de la transition
             }
+        }
+
+        // Fonction pour formater le texte dB en couleur
+        function formatDbText(value) {
+            if (value > 0) return `<span class="text-brand-pink">+${value} dB</span>`;
+            if (value < 0) return `<span class="text-brand-cyan">${value} dB</span>`;
+            return `<span class="text-slate-400">0 dB</span>`;
         }
 
         // Fonction pour modifier les valeurs de l'EQ
         function updateEQ(band, value) {
             if (!audioCtx) initAudioContext();
             
-            // Si la sécurité bloque l'accès, on ne peut pas modifier, mais on tente quand même
+            const numValue = parseInt(value);
+            
+            // Mise à jour visuelle du texte (+ couleurs)
+            if (band === 'bass') document.getElementById('bass-val').innerHTML = formatDbText(numValue);
+            if (band === 'mid') document.getElementById('mid-val').innerHTML = formatDbText(numValue);
+            if (band === 'treble') document.getElementById('treble-val').innerHTML = formatDbText(numValue);
+
             try {
-                if (band === 'bass' && filterBass) filterBass.gain.value = value;
-                if (band === 'mid' && filterMid) filterMid.gain.value = value;
-                if (band === 'treble' && filterTreble) filterTreble.gain.value = value;
+                if (band === 'bass' && filterBass) filterBass.gain.value = numValue;
+                if (band === 'mid' && filterMid) filterMid.gain.value = numValue;
+                if (band === 'treble' && filterTreble) filterTreble.gain.value = numValue;
             } catch (e) {
                 console.warn("Impossible de modifier l'EQ", e);
             }
+        }
+
+        // Réinitialiser l'EQ
+        function resetEQ() {
+            document.getElementById('eq-bass-slider').value = 0;
+            document.getElementById('eq-mid-slider').value = 0;
+            document.getElementById('eq-treble-slider').value = 0;
+            updateEQ('bass', 0);
+            updateEQ('mid', 0);
+            updateEQ('treble', 0);
         }
 
         function loadTrack(index, autoplay = true) {
