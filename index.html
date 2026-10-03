@@ -258,7 +258,8 @@
         </div>
     </footer>
 
-    <audio id="audio-element" crossorigin="anonymous" preload="auto"></audio>
+    <!-- La balise audio modifiée pour éviter les blocages locaux -->
+    <audio id="audio-element" preload="auto"></audio>
 
     <script>
         const fallbackCovers = [
@@ -284,7 +285,6 @@
         ];
 
         // --- GESTION DES FAVORIS ---
-        // On récupère les favoris enregistrés, ou on crée un tableau vide
         let favoriteIds = JSON.parse(localStorage.getItem('harmonie_favorites')) || [];
 
         function toggleFavorite(event, trackId) {
@@ -519,7 +519,7 @@
 
             grid.innerHTML = filtered.map(track => {
                 const isCurrent = currentTrackIndex === track.id - 1;
-                const isFav = favoriteIds.includes(track.id); // Vérifie si la musique est dans les favoris
+                const isFav = favoriteIds.includes(track.id);
 
                 return `
                     <div onclick="loadTrack(${track.id - 1}, true)" class="glass-card rounded-2xl p-4 cursor-pointer group relative overflow-hidden flex flex-col justify-between ${isCurrent ? 'border-brand-cyan/60 bg-white/10 shadow-lg shadow-brand-cyan/10' : ''}">
@@ -572,32 +572,62 @@
 
         function drawVisualizer() {
             requestAnimationFrame(drawVisualizer);
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
+            
+            if (canvas.width !== canvas.offsetWidth) canvas.width = canvas.offsetWidth;
+            if (canvas.height !== canvas.offsetHeight) canvas.height = canvas.offsetHeight;
+            
             const width = canvas.width;
             const height = canvas.height;
             canvasCtx.clearRect(0, 0, width, height);
 
-            if (!isPlaying || !analyser) {
+            if (!isPlaying) {
                 canvasCtx.fillStyle = 'rgba(0, 242, 254, 0.2)';
                 canvasCtx.fillRect(0, height / 2 - 1, width, 2);
                 return;
             }
 
-            analyser.getByteFrequencyData(dataArray);
+            let hasRealData = false;
+            
+            if (analyser) {
+                analyser.getByteFrequencyData(dataArray);
+                for (let i = 0; i < dataArray.length; i++) {
+                    if (dataArray[i] > 0) {
+                        hasRealData = true;
+                        break;
+                    }
+                }
+            }
 
-            const barWidth = (width / dataArray.length) * 2.5;
+            const numBars = 64; 
+            const barWidth = (width / numBars) * 0.7;
+            const gap = (width / numBars) * 0.3;
             let x = 0;
-            for (let i = 0; i < dataArray.length; i++) {
-                const barHeight = (dataArray[i] / 255) * height;
+
+            for (let i = 0; i < numBars; i++) {
+                let barHeight = 0;
+                
+                if (hasRealData) {
+                    const dataIndex = Math.floor(i * (dataArray.length / numBars));
+                    barHeight = (dataArray[dataIndex] / 255) * height;
+                } else {
+                    const time = Date.now() / 150;
+                    const bounce = (Math.sin(time + (i * 0.2)) * 0.5 + 0.5);
+                    const randomSpike = Math.random() * 0.5;
+                    barHeight = (bounce * 0.5 + randomSpike) * height * 0.9;
+                }
+
                 const gradient = canvasCtx.createLinearGradient(0, height, 0, 0);
-                gradient.addColorStop(0, '#7928ca');
-                gradient.addColorStop(0.5, '#00f2fe');
-                gradient.addColorStop(1, '#ff0080');
+                gradient.addColorStop(0, '#7928ca'); 
+                gradient.addColorStop(0.5, '#00f2fe'); 
+                gradient.addColorStop(1, '#ff0080'); 
+                
                 canvasCtx.fillStyle = gradient;
-                canvasCtx.fillRect(x, height - barHeight, barWidth, barHeight);
-                x += barWidth + 1;
-                if (x > width) break;
+                
+                canvasCtx.beginPath();
+                canvasCtx.roundRect(x, height - barHeight, barWidth, Math.max(barHeight, 2), 4);
+                canvasCtx.fill();
+                
+                x += barWidth + gap;
             }
         }
 
